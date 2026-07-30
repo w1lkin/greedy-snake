@@ -3,12 +3,12 @@
  */
 
 :root {
-  --bg: #9bbc8f;          /* 画布背景：诺基亚复古灰绿屏 */
-  --panel: #8bac0f;       /* 面板背景 */
+  --bg: #9aaf7a;          /* 画布背景：橄榄灰绿 */
+  --panel: #8bac0f;       /* 面板背景（按钮主色） */
   --pixel: #0f1f14;       /* 像素黑（蛇身/食物/文字） */
-  --pixel-soft: #5d6e4b;  /* 暗绿副色（边框/暗部） */
-  --highlight: #c4d6a8;   /* 浅绿高光 */
-  --line: #8bac0f;        /* 描边/分割线 */
+  --pixel-soft: #6d7a5b;  /* 暗绿副色（边框/暗部） */
+  --highlight: #c4cfa8;   /* 浅绿高光 */
+  --line: #8a9a68;        /* 描边/分割线 */
 }
 
 * { box-sizing: border-box; }
