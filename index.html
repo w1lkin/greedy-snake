@@ -28,7 +28,7 @@
       <!-- 开始覆盖层 -->
       <div id="overlay-ready" class="overlay">
         <h2>贪吃蛇</h2>
-        <p class="tip">方向键 / WASD 或滑动屏幕来控制</p>
+        <p class="tip">方向键 / WASD 或下方方向键控制</p>
         <button id="btn-start" class="pixel-btn">开始游戏</button>
         <div class="records">
           <h3>最近记录</h3>
@@ -50,7 +50,15 @@
       </div>
     </div>
 
-    <footer class="game-footer">键盘 / 触屏双控 · 本地保存最近 10 次</footer>
+    <!-- 屏幕方向键（移动端 / 无键盘场景） -->
+    <div class="dpad" id="dpad">
+      <button class="dpad-btn dpad-up" id="pad-up" aria-label="上">▲</button>
+      <button class="dpad-btn dpad-left" id="pad-left" aria-label="左">◀</button>
+      <button class="dpad-btn dpad-right" id="pad-right" aria-label="右">▶</button>
+      <button class="dpad-btn dpad-down" id="pad-down" aria-label="下">▼</button>
+    </div>
+
+    <footer class="game-footer">键盘 / 方向键双控 · 本地保存最近 10 次</footer>
   </div>
 
   <!-- 脚本按依赖顺序加载：存储→核心→渲染→输入→分享→入口 -->
