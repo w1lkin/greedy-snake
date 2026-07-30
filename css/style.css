@@ -158,6 +158,50 @@ body {
   border: 2px solid var(--line);
 }
 
+/* ---- 屏幕方向键 D-pad ---- */
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(3, 56px);
+  gap: 8px;
+  justify-content: center;
+  margin: 16px auto 0;
+}
+/* 十字布局：上(2,1) 左(1,2) 右(3,2) 下(2,3) */
+.dpad-up    { grid-area: 1 / 2; }
+.dpad-left  { grid-area: 2 / 1; }
+.dpad-right { grid-area: 2 / 3; }
+.dpad-down  { grid-area: 3 / 2; }
+
+.dpad-btn {
+  font-family: inherit;
+  font-size: 20px;
+  line-height: 1;
+  color: #9bbc8f;
+  background: var(--pixel);
+  border: 2px solid var(--pixel-soft);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 rgba(15, 31, 20, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: manipulation; /* 禁双击缩放 */
+}
+.dpad-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(15, 31, 20, 0.35);
+  background: var(--pixel-soft);
+  color: #9bbc8f;
+}
+
+/* 桌面端有键盘，方向键默认隐藏，便于宽屏直接键控 */
+@media (min-width: 640px) {
+  .dpad { display: none; }
+}
+
 /* ---- 底部 ---- */
 .game-footer {
   text-align: center;
