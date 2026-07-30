@@ -7,10 +7,11 @@
 
   var DIR = global.SnakeCore.DIR;
 
-  // 初始化输入。opts: { stage, onDirection(dir), onAction() }
+  // 初始化输入。opts: { stage, onDirection(dir), onAction(), onPause() }
   function setup(opts) {
     var onDirection = opts.onDirection || function () {};
     var onAction = opts.onAction || function () {};
+    var onPause = opts.onPause || function () {};
 
     // ---------- 键盘 ----------
     global.addEventListener('keydown', function (e) {
@@ -20,7 +21,9 @@
         case 'ArrowDown': case 's': case 'S': onDirection(DIR.DOWN); break;
         case 'ArrowLeft': case 'a': case 'A': onDirection(DIR.LEFT); break;
         case 'ArrowRight': case 'd': case 'D': onDirection(DIR.RIGHT); break;
-        case ' ': case 'Enter': onAction(); break;
+        // 空格/回车：非游戏中=开始或重开；游戏中=暂停（由 main 按 running 判断）
+        case ' ': case 'Enter': onAction(); onPause(); break;
+        case 'p': case 'P': onPause(); break;
         default: handled = false;
       }
       if (handled) e.preventDefault(); // 阻止方向键滚动页面

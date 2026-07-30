@@ -10,6 +10,13 @@
   var INIT_LEN = 3;         // 初始长度
   var SCORE_PER_FOOD = 10;  // 每个食物得分
 
+  // 三档难度：初始步进间隔、最快间隔下限、每吃食物加速量
+  var DIFFICULTIES = {
+    easy:   { label: '简单', tickInterval: 160, minTick: 110, speedStep: 2 },
+    normal: { label: '中等', tickInterval: 120, minTick: 60,  speedStep: 4 },
+    hard:   { label: '困难', tickInterval: 80,  minTick: 40,  speedStep: 6 }
+  };
+
   // 四个方向常量
   var DIR = {
     UP: { x: 0, y: -1 },
@@ -18,8 +25,9 @@
     RIGHT: { x: 1, y: 0 }
   };
 
-  // 创建初始游戏状态
-  function createState() {
+  // 创建初始游戏状态；diff 可选 'easy'|'normal'|'hard'
+  function createState(diff) {
+    var cfg = DIFFICULTIES[diff] || DIFFICULTIES.normal;
     var snake = [];
     var cy = Math.floor(ROWS / 2);   // 垂直居中
     var cx = Math.floor(COLS / 2);   // 水平居中
@@ -36,9 +44,9 @@
       food: null,
       score: 0,
       alive: true,
-      tickInterval: 120,  // 步进间隔(ms)
-      minTick: 60,        // 最快间隔(ms)下限，防止过快
-      speedStep: 4        // 每吃一个食物缩短的间隔(ms)
+      tickInterval: cfg.tickInterval,  // 步进间隔(ms)
+      minTick: cfg.minTick,            // 最快间隔(ms)下限，防止过快
+      speedStep: cfg.speedStep         // 每吃一个食物缩短的间隔(ms)
     };
     state.food = spawnFood(state);
     return state;
@@ -120,6 +128,7 @@
   // 对外暴露接口
   global.SnakeCore = {
     DIR: DIR,
+    DIFFICULTIES: DIFFICULTIES,
     createState: createState,
     setDirection: setDirection,
     step: step,

@@ -18,6 +18,7 @@
       <div class="score-board">
         <span>分数 <b id="score">0</b></span>
         <span>最高 <b id="best">0</b></span>
+        <button id="btn-pause" class="pixel-btn mini" aria-label="暂停" hidden>❚❚</button>
       </div>
     </header>
 
@@ -29,11 +30,24 @@
       <div id="overlay-ready" class="overlay">
         <h2>贪吃蛇</h2>
         <p class="tip">方向键 / WASD 或下方方向键控制</p>
+        <div class="diff-group" id="diff-group">
+          <span class="diff-label">难度</span>
+          <button class="diff-btn" data-diff="easy">简单</button>
+          <button class="diff-btn active" data-diff="normal">中等</button>
+          <button class="diff-btn" data-diff="hard">困难</button>
+        </div>
         <button id="btn-start" class="pixel-btn">开始游戏</button>
         <div class="records">
           <h3>最近记录</h3>
           <ol id="records-list"></ol>
         </div>
+      </div>
+
+      <!-- 暂停遮罩 -->
+      <div id="overlay-pause" class="overlay hidden">
+        <h2>已暂停</h2>
+        <p class="tip">点击继续，或按空格 / P 键</p>
+        <button id="btn-resume" class="pixel-btn">继续游戏</button>
       </div>
 
       <!-- 结束覆盖层 -->

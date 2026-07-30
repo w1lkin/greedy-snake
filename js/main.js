@@ -19,7 +19,11 @@
   var btnStart = document.getElementById('btn-start');
   var btnRestart = document.getElementById('btn-restart');
   var btnShare = document.getElementById('btn-share');
+  var btnPause = document.getElementById('btn-pause');
+  var btnResume = document.getElementById('btn-resume');
+  var overlayPause = document.getElementById('overlay-pause');
   var shareArea = document.getElementById('share-area');
+  var diffGroup = document.getElementById('diff-group');
 
   // ---------- 运行时状态 ----------
   var state = null;        // 当前游戏状态（SnakeCore.createState 产出）
@@ -27,6 +31,8 @@
   var lastTick = 0;        // 上次步进时间戳
   var rafId = null;        // requestAnimationFrame 句柄
   var pausedByHidden = false; // 是否因页面切后台而暂停
+  var paused = false;      // 是否手动暂停（遮罩）
+  var currentDifficulty = 'normal'; // 当前难度
 
   // 渲染「最近记录」列表（ready 与 over 页共用）
   function renderRecords() {
@@ -52,9 +58,12 @@
   // 进入 ready 状态：展示开始页与历史记录
   function toReady() {
     running = false;
+    paused = false;
     overlayReady.classList.remove('hidden');
     overlayOver.classList.add('hidden');
-    state = SnakeCore.createState();
+    overlayPause.classList.add('hidden');
+    btnPause.hidden = true;
+    state = SnakeCore.createState(currentDifficulty);
     SnakeRender.draw(ctx, state);
     renderRecords();
     scoreEl.textContent = '0';
@@ -62,21 +71,44 @@
 
   // 开始 / 重新开始游戏
   function startGame() {
-    state = SnakeCore.createState();
+    state = SnakeCore.createState(currentDifficulty);
     running = true;
+    paused = false;
     pausedByHidden = false;
     overlayReady.classList.add('hidden');
     overlayOver.classList.add('hidden');
+    overlayPause.classList.add('hidden');
+    btnPause.hidden = false;
     shareArea.innerHTML = '';
     lastTick = performance.now();
     scoreEl.textContent = '0';
     loop(lastTick);
   }
 
+  // 暂停 / 继续
+  function pauseGame() {
+    if (!running || paused) return;
+    paused = true;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    overlayPause.classList.remove('hidden');
+  }
+  function resumeGame() {
+    if (!paused) return;
+    paused = false;
+    overlayPause.classList.add('hidden');
+    lastTick = performance.now();
+    loop(lastTick);
+  }
+
   // 游戏结束：写入记录并展示结束页
   function gameOver() {
     running = false;
+    paused = false;
     if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    btnPause.hidden = true;
+    overlayPause.classList.add('hidden');
     var result = SnakeStorage.addRecord(state.score);
     finalScoreEl.textContent = state.score;
     finalBestEl.textContent = result.best;
@@ -87,6 +119,7 @@
   // 主循环：按固定 tick 步进
   function loop(now) {
     if (!running) return;
+    if (paused) { rafId = null; return; } // 暂停时停止帧循环
     rafId = requestAnimationFrame(loop);
     if (now - lastTick >= state.tickInterval) {
       lastTick = now;
@@ -104,17 +137,26 @@
   SnakeInput.setup({
     stage: canvas,
     onDirection: function (dir) {
-      if (running && state) SnakeCore.setDirection(state, dir);
+      if (running && !paused && state) SnakeCore.setDirection(state, dir);
     },
     onAction: function () {
       // 非游戏进行中时，空格/回车开始或重开
       if (!running) startGame();
+    },
+    onPause: function () {
+      // 游戏中：空格/P 切换暂停
+      if (!running) return;
+      if (paused) resumeGame(); else pauseGame();
     }
   });
 
   // ---------- 按钮事件 ----------
   btnStart.addEventListener('click', startGame);
   btnRestart.addEventListener('click', startGame);
+  btnPause.addEventListener('click', function () {
+    if (paused) resumeGame(); else pauseGame();
+  });
+  btnResume.addEventListener('click', resumeGame);
   btnShare.addEventListener('click', function () {
     if (!state) return;
     SnakeShare.generate({
@@ -123,6 +165,19 @@
       mount: shareArea
     });
   });
+
+  // ---------- 难度选择 ----------
+  if (diffGroup) {
+    diffGroup.addEventListener('click', function (e) {
+      var btn = e.target.closest('.diff-btn');
+      if (!btn) return;
+      currentDifficulty = btn.getAttribute('data-diff');
+      var btns = diffGroup.querySelectorAll('.diff-btn');
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle('active', btns[i] === btn);
+      }
+    });
+  }
 
   // ---------- 页面切后台暂停，回前台恢复 ----------
   document.addEventListener('visibilitychange', function () {

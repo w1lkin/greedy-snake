@@ -16,7 +16,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: #8bac0f;
+  background: #ffffff; /* 非游戏区域白色，游戏画布保持绿屏 */
   color: var(--pixel);
   /* 像素字体优先，离线回退等宽 */
   font-family: "Press Start 2P", "Courier New", monospace;
@@ -133,15 +133,16 @@ body {
 .pixel-btn {
   font-family: inherit;
   font-size: 11px;
-  color: #9bbc8f;
-  background: var(--pixel);
-  border: 2px solid var(--pixel-soft);
+  color: #ffffff;
+  background: var(--panel);          /* 绿屏绿底，与主视觉呼应 */
+  border: 2px solid var(--pixel);
   padding: 10px 14px;
   cursor: pointer;
   box-shadow: 3px 3px 0 rgba(15,31,20,0.35);
   transition: transform 0.05s ease;
 }
 .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 rgba(15,31,20,0.35); }
+.pixel-btn.mini { font-size: 12px; padding: 6px 10px; letter-spacing: 1px; }
 .btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
 /* ---- 分享区 ---- */
@@ -176,9 +177,9 @@ body {
   font-family: inherit;
   font-size: 20px;
   line-height: 1;
-  color: #9bbc8f;
-  background: var(--pixel);
-  border: 2px solid var(--pixel-soft);
+  color: #ffffff;
+  background: var(--panel);          /* 绿屏绿底，与按钮统一 */
+  border: 2px solid var(--pixel);
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 3px 3px 0 rgba(15, 31, 20, 0.35);
@@ -192,8 +193,34 @@ body {
 .dpad-btn:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 rgba(15, 31, 20, 0.35);
-  background: var(--pixel-soft);
+  background: var(--pixel);
   color: #9bbc8f;
+}
+
+/* ---- 难度选择 ---- */
+.diff-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 10px;
+}
+.diff-label { color: var(--pixel); }
+.diff-btn {
+  font-family: inherit;
+  font-size: 10px;
+  color: var(--pixel);
+  background: transparent;
+  border: 2px solid var(--pixel-soft);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+.diff-btn.active {
+  color: #ffffff;
+  background: var(--panel);
+  border-color: var(--pixel);
 }
 
 /* 桌面端有键盘，方向键默认隐藏，便于宽屏直接键控 */
