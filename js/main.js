@@ -8,6 +8,20 @@
   // ---------- DOM 引用 ----------
   var canvas = document.getElementById('board');
   var ctx = canvas.getContext('2d');
+  var stage = canvas.parentElement; // .stage
+  var COLS = SnakeCore.COLS;
+  var ROWS = SnakeCore.ROWS;
+
+  // 让 canvas 内部分辨率匹配显示尺寸 × DPR，且为格子数的整数倍。
+  // 这样 CSS 缩放比例为整数，最近邻缩放不会丢格子/网格线。
+  function fitCanvas() {
+    var dpr = window.devicePixelRatio || 1;
+    var cssW = stage.clientWidth || 400;          // 显示宽度（CSS 像素）
+    var target = Math.round(cssW * dpr);          // 目标物理像素
+    var cell = Math.max(2, Math.round(target / COLS)); // 每格物理像素（整数）
+    canvas.width = cell * COLS;
+    canvas.height = cell * ROWS;
+  }
 
   var scoreEl = document.getElementById('score');
   var bestEl = document.getElementById('best');
@@ -194,5 +208,15 @@
   });
 
   // ---------- 初始化 ----------
+  fitCanvas();
+  // 窗口尺寸变化时重新适配画布并重绘当前画面
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      fitCanvas();
+      if (state) SnakeRender.draw(ctx, state);
+    }, 150);
+  });
   toReady();
 })();

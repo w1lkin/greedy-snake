@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <!-- 移动端适配：禁止缩放，保证触屏滑动手感 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>贪吃蛇 · 像素复古</title>
+  <title>贪吃蛇</title>
   <!-- 像素字体（CDN），离线回退到等宽字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
@@ -43,13 +43,6 @@
         </div>
       </div>
 
-      <!-- 暂停遮罩 -->
-      <div id="overlay-pause" class="overlay hidden">
-        <h2>已暂停</h2>
-        <p class="tip">点击继续，或按空格 / P 键</p>
-        <button id="btn-resume" class="pixel-btn">继续游戏</button>
-      </div>
-
       <!-- 结束覆盖层 -->
       <div id="overlay-over" class="overlay hidden">
         <h2>游戏结束</h2>
@@ -61,6 +54,13 @@
         </div>
         <!-- 分享卡渲染容器 -->
         <div id="share-area"></div>
+      </div>
+
+      <!-- 暂停遮罩（覆盖游戏画布区域） -->
+      <div id="overlay-pause" class="overlay hidden">
+        <h2>已暂停</h2>
+        <p class="tip">点击继续，或按空格 / P 键</p>
+        <button id="btn-resume" class="pixel-btn">继续游戏</button>
       </div>
     </div>
 

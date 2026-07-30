@@ -188,13 +188,16 @@
     }
 
     var canvas = generateShareCard(opts);
-    var ctx = canvas.getContext('2d');
 
-    // 二维码：有链接才加载，失败则降级
+    // 关键：先立即显示卡片，不被二维码网络请求阻塞（否则请求挂起时「点没反应」）
+    showOverlay(canvas);
+
+    // 二维码：有链接才异步加载，加载成功后补绘到已显示的卡片上；失败则静默降级
     if (SHARE_URL) {
       var qrImg = new Image();
       qrImg.crossOrigin = 'anonymous';
       qrImg.onload = function () {
+        var ctx = canvas.getContext('2d');
         var qs = 260, qx = (W - qs) / 2, qy = H - 360;
         ctx.fillStyle = '#FFF';
         rr(ctx, qx - 24, qy - 24, qs + 48, qs + 48, 32); ctx.fill();
@@ -204,12 +207,12 @@
         ctx.fillStyle = '#6d7a5b';
         ctx.font = "26px -apple-system, 'PingFang SC', sans-serif";
         ctx.fillText('扫码或长按识别 · 和朋友一起玩', W / 2, H - 40);
-        showOverlay(canvas);
+        // 更新已展示的图片
+        var img = document.getElementById('share-card-img');
+        if (img) img.src = canvas.toDataURL('image/png');
       };
-      qrImg.onerror = function () { showOverlay(canvas); };
+      qrImg.onerror = function () { /* 失败不阻塞，卡片已显示 */ };
       qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=' + encodeURIComponent(SHARE_URL) + '&margin=8';
-    } else {
-      showOverlay(canvas);
     }
   }
 
