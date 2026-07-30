@@ -1,7 +1,7 @@
 // share.js
 // 分享卡：采用 share-card-generator 技能模式，在离屏 canvas 绘制 1200×1600
 // 像素复古分享卡，并用全屏覆盖层展示，支持「长按保存」分享到微信。
-// 主题：像素绿（与游戏一致）。
+// 主题：橄榄灰绿复古（与游戏一致）。
 
 (function (global) {
   'use strict';
@@ -24,9 +24,9 @@
     ctx.closePath();
   }
 
-  // 在卡片上画一个像素小蛇 + 食物，采用诺基亚绿屏风格
+  // 在卡片上画一个像素小蛇 + 食物，采用橄榄灰绿复古风格
   function drawPixelSnake(ctx) {
-    var dark = '#0f1f14', grid = '#8bac0f', bg = '#9bbc8f';
+    var dark = '#0f1f14', grid = '#8a9a68', bg = '#9aaf7a';
     var u = 26; // 单元像素
     var ox = 600 - 3 * u, oy = 470;
     // 蛇身路径（格子坐标）
@@ -59,13 +59,13 @@
     var ctx = canvas.getContext('2d');
     var W = 1200, H = 1600;
 
-    // 诺基亚绿屏复古主题
+    // 橄榄灰绿复古主题
     var theme = {
-      bg: '#8bac0f', bgGradTop: '#9bbc8f', bgGradBot: '#8bac0f',
-      cardBg: '#9bbc8f', accent: '#0f1f14',
+      bg: '#9aaf7a', bgGradTop: '#9aaf7a', bgGradBot: '#8a9a68',
+      cardBg: '#9aaf7a', accent: '#0f1f14',
       accentDim: 'rgba(15,31,20,0.35)', accentShadow: 'rgba(15,31,20,0.2)',
-      textTitle: '#0f1f14', textSub: '#5d6e4b', textFeature: '#0f1f14',
-      textHint: '#5d6e4b', dividerColor: '#8bac0f'
+      textTitle: '#0f1f14', textSub: '#6d7a5b', textFeature: '#0f1f14',
+      textHint: '#6d7a5b', dividerColor: '#8a9a68'
     };
 
     // 背景渐变
@@ -201,7 +201,7 @@
         ctx.strokeStyle = '#0f1f14'; ctx.lineWidth = 2;
         rr(ctx, qx - 24, qy - 24, qs + 48, qs + 48, 32); ctx.stroke();
         ctx.drawImage(qrImg, qx, qy, qs, qs);
-        ctx.fillStyle = '#5d6e4b';
+        ctx.fillStyle = '#6d7a5b';
         ctx.font = "26px -apple-system, 'PingFang SC', sans-serif";
         ctx.fillText('扫码或长按识别 · 和朋友一起玩', W / 2, H - 40);
         showOverlay(canvas);
