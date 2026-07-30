@@ -7,14 +7,14 @@
 
   var CELL = 20; // 每格像素数（画布 400 / 20 格）
 
-  // 限定调色板：诺基亚绿屏复古
+  // 限定调色板：复古橄榄绿 + 黑色像素方块（与参考图一致）
   var COLOR = {
-    bg: '#9bbc8f',      // 背景
-    grid: '#8bac0f',    // 网格线
+    bg: '#9aaf7a',      // 橄榄灰绿背景
+    grid: '#8a9a68',    // 淡网格线/方块间隙
     snakeBody: '#0f1f14', // 蛇身
     snakeHead: '#0f1f14', // 蛇头
     food: '#0f1f14',    // 食物
-    eye: '#9bbc8f'      // 蛇眼
+    eye: '#9aaf7a'      // 蛇眼（背景色）
   };
 
   // 绘制整帧
@@ -49,30 +49,40 @@
     for (var i = state.snake.length - 1; i >= 0; i--) {
       var isHead = (i === 0);
       drawCell(ctx, state.snake[i].x, state.snake[i].y, COLOR.snakeBody);
-      if (isHead) drawEyes(ctx, state.snake[i].x, state.snake[i].y);
+      if (isHead) drawEyes(ctx, state.snake[i].x, state.snake[i].y, state.dir);
     }
   }
 
-  // 绘制单个像素块（黑块 + 浅绿描边，形成复古方块感）
+  // 绘制单个像素块（黑色方块 + 细浅绿间隙，与参考图一致）
   function drawCell(ctx, gx, gy, color) {
     var px = gx * CELL;
     var py = gy * CELL;
-    // 1px 浅绿描边
-    ctx.fillStyle = '#8bac0f';
+    // 浅绿间隙/描边
+    ctx.fillStyle = COLOR.grid;
     ctx.fillRect(px + 1, py + 1, CELL - 2, CELL - 2);
-    // 内部黑块
+    // 内部黑色方块（几乎填满格子）
     ctx.fillStyle = color;
-    ctx.fillRect(px + 3, py + 3, CELL - 6, CELL - 6);
+    ctx.fillRect(px + 2, py + 2, CELL - 4, CELL - 4);
   }
 
-  // 蛇头双眼
-  function drawEyes(ctx, gx, gy) {
+  // 蛇头双眼：位于前进方向一侧
+  function drawEyes(ctx, gx, gy, dir) {
     var px = gx * CELL;
     var py = gy * CELL;
     ctx.fillStyle = COLOR.eye;
-    // 两个 3px 小方点
-    ctx.fillRect(px + 6, py + 6, 3, 3);
-    ctx.fillRect(px + 11, py + 6, 3, 3);
+    if (dir.x === 1) { // 朝右
+      ctx.fillRect(px + 14, py + 5, 2, 2);
+      ctx.fillRect(px + 14, py + 11, 2, 2);
+    } else if (dir.x === -1) { // 朝左
+      ctx.fillRect(px + 3, py + 5, 2, 2);
+      ctx.fillRect(px + 3, py + 11, 2, 2);
+    } else if (dir.y === -1) { // 朝上
+      ctx.fillRect(px + 5, py + 3, 2, 2);
+      ctx.fillRect(px + 11, py + 3, 2, 2);
+    } else { // 朝下
+      ctx.fillRect(px + 5, py + 14, 2, 2);
+      ctx.fillRect(px + 11, py + 14, 2, 2);
+    }
   }
 
   // 对外暴露接口
