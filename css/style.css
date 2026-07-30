@@ -98,14 +98,13 @@ body {
   gap: 12px;
   padding: 16px;
   text-align: center;
-  background: rgba(5, 8, 5, 0.92);
+  background: var(--bg); /* 绿屏底色，黑字清晰 */
   z-index: 2;
 }
 .overlay.hidden { display: none; }
 .overlay h2 {
   font-size: 18px;
   color: var(--pixel);
-  text-shadow: 2px 2px 0 rgba(15,31,20,0.2);
   margin: 0;
 }
 .overlay p { font-size: 10px; color: var(--pixel-soft); line-height: 1.8; margin: 0; }
@@ -117,7 +116,7 @@ body {
   width: 80%;
   max-height: 40%;
   overflow-y: auto;
-  border-top: 2px dashed var(--line);
+  border-top: 2px dashed var(--pixel-soft);
   padding-top: 8px;
 }
 .records h3 { font-size: 11px; margin: 0 0 8px; color: var(--pixel); }
