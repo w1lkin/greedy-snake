@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <!-- 移动端适配：禁止缩放，保证触屏滑动手感 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>贪吃蛇 · 像素复古</title>
+  <!-- 像素字体（CDN），离线回退到等宽字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="game-shell">
+    <!-- 顶部：标题与分数板 -->
+    <header class="game-header">
+      <h1 class="game-title">贪吃蛇</h1>
+      <div class="score-board">
+        <span>分数 <b id="score">0</b></span>
+        <span>最高 <b id="best">0</b></span>
+      </div>
+    </header>
+
+    <!-- 舞台：画布 + 覆盖层 -->
+    <div class="stage">
+      <canvas id="board" width="400" height="400"></canvas>
+
+      <!-- 开始覆盖层 -->
+      <div id="overlay-ready" class="overlay">
+        <h2>贪吃蛇</h2>
+        <p class="tip">方向键 / WASD 或滑动屏幕来控制</p>
+        <button id="btn-start" class="pixel-btn">开始游戏</button>
+        <div class="records">
+          <h3>最近记录</h3>
+          <ol id="records-list"></ol>
+        </div>
+      </div>
+
+      <!-- 结束覆盖层 -->
+      <div id="overlay-over" class="overlay hidden">
+        <h2>游戏结束</h2>
+        <p>本局分数 <b id="final-score">0</b></p>
+        <p>历史最高 <b id="final-best">0</b></p>
+        <div class="btn-row">
+          <button id="btn-restart" class="pixel-btn">再来一局</button>
+          <button id="btn-share" class="pixel-btn">生成分享卡</button>
+        </div>
+        <!-- 分享卡渲染容器 -->
+        <div id="share-area"></div>
+      </div>
+    </div>
+
+    <footer class="game-footer">键盘 / 触屏双控 · 本地保存最近 10 次</footer>
+  </div>
+
+  <!-- 脚本按依赖顺序加载：存储→核心→渲染→输入→分享→入口 -->
+  <script src="js/storage.js"></script>
+  <script src="js/snake.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
