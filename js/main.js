@@ -226,8 +226,6 @@
   // 硬登录门：未登录不能玩
   GamePlatform.init();
   GamePlatform.mountGate({ gameId: 'greedy-snake' }).then(function () {
-    GamePlatform.mountBar(document.getElementById('gp-bar'), { gameId: 'greedy-snake' });
-    GamePlatform.mountLeaderboard(document.getElementById('gp-leaderboard'), { gameId: 'greedy-snake' });
     toReady();
   });
 })();
