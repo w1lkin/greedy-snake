@@ -7,7 +7,7 @@
   'use strict';
 
   // 分享链接：部署后填入你的网址；留空则不显示二维码（降级为无码卡片）
-  var SHARE_URL = 'https://greedy-snake.w1lkin.site/';
+  var SHARE_URL = 'https://greedy-snake-3wq.pages.dev/';
 
   // 圆角矩形路径
   function rr(ctx, x, y, w, h, r) {
