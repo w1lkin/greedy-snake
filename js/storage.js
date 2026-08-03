@@ -1,68 +1,39 @@
 // storage.js
-// 本地存储模块：负责「最近 10 次记录」与「历史最高分」的读写。
-// 使用浏览器 localStorage，键名带版本号便于后续迁移。
+// 云端存储模块：负责「最近 10 次记录」与「历史最高分」的读写（原 localStorage 已移除）。
+// 战绩上报走 GamePlatform.submitScore，历史读取走 GamePlatform.getMyScores。
 
 (function (global) {
   'use strict';
 
-  // 存储键名（带 _v1 版本后缀，避免与旧数据冲突）
-  var RECORDS_KEY = 'snake_records_v1';
-  var BEST_KEY = 'snake_best_v1';
-  // 最多保留的记录条数
   var MAX_RECORDS = 10;
+  // 内存缓存最近一次的最高分，供同步展示用
+  var _bestCache = 0;
 
-  // 安全读取 JSON：解析失败或环境不支持时返回 fallback
-  function safeGet(key, fallback) {
-    try {
-      var raw = global.localStorage.getItem(key);
-      if (raw === null) return fallback;
-      return JSON.parse(raw);
-    } catch (e) {
-      // 隐私模式 / 存储不可用：降级为默认值
-      return fallback;
-    }
-  }
-
-  // 安全写入 JSON：失败仅忽略（不影响游戏进行）
-  function safeSet(key, value) {
-    try {
-      global.localStorage.setItem(key, JSON.stringify(value));
-    } catch (e) {
-      // 忽略写入异常（如配额满、隐私模式）
-    }
-  }
-
-  // 读取最近记录（数组，最新在前）
+  // 读取最近记录（异步，数组最新在前）
   function getRecords() {
-    var list = safeGet(RECORDS_KEY, []);
-    return Array.isArray(list) ? list : [];
+    return global.GamePlatform.getMyScores('greedy-snake', MAX_RECORDS).then(function (items) {
+      return items.map(function (it) { return { score: it.score, date: new Date(it.created_at).toISOString() }; });
+    }).catch(function () { return []; });
   }
 
-  // 读取历史最高分（数字）
+  // 读取历史最高分（异步，数字）
   function getBest() {
-    var best = safeGet(BEST_KEY, 0);
-    return (typeof best === 'number' && isFinite(best)) ? best : 0;
+    return getRecords().then(function (list) {
+      var best = 0;
+      for (var i = 0; i < list.length; i++) if (list[i].score > best) best = list[i].score;
+      _bestCache = best;
+      return best;
+    }).catch(function () { return 0; });
   }
 
-  // 追加一局记录：{ score, date }，保留最近 MAX_RECORDS 条
-  function addRecord(score) {
-    var list = getRecords();
-    list.unshift({
-      score: score,
-      date: new Date().toISOString()
-    });
-    if (list.length > MAX_RECORDS) {
-      list = list.slice(0, MAX_RECORDS);
-    }
-    safeSet(RECORDS_KEY, list);
-
-    // 同步更新最高分（取较大值）
-    var best = getBest();
-    if (score > best) {
-      safeSet(BEST_KEY, score);
-      best = score;
-    }
-    return { records: list, best: best };
+  // 追加一局记录：score = 蛇长度（越大越好）。同步触发云端上报，返回含 best 的对象。
+  function addRecord(score, difficulty) {
+    try {
+      global.GamePlatform.submitScore('greedy-snake', score, { difficulty: difficulty });
+    } catch (e) { console.warn('submit score failed:', e); }
+    var best = (score > _bestCache) ? score : _bestCache;
+    _bestCache = best;
+    return { records: [], best: best };
   }
 
   // 对外暴露接口
