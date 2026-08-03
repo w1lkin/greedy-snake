@@ -5,12 +5,17 @@
   <!-- 移动端适配：禁止缩放，保证触屏滑动手感 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>贪吃蛇</title>
+  <meta name="api-base" content="https://api.w1lkin.site">
+  <script src="https://api.w1lkin.site/sdk.js"></script>
   <!-- 像素字体（CDN），离线回退到等宽字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <!-- 云端平台栏（登录态/登出）与排行榜浮窗，由 SDK 注入 -->
+  <div id="gp-bar" style="position:fixed;top:0;left:0;right:0;z-index:50;"></div>
+  <div id="gp-leaderboard" style="position:fixed;right:8px;bottom:8px;z-index:50;"></div>
   <div class="game-shell">
     <!-- 顶部：标题与分数板 -->
     <header class="game-header">
@@ -72,7 +77,7 @@
       <button class="dpad-btn dpad-down" id="pad-down" aria-label="下">▼</button>
     </div>
 
-    <footer class="game-footer">键盘 / 方向键双控 · 本地保存最近 10 次</footer>
+    <footer class="game-footer">键盘 / 方向键双控 · 战绩云端保存</footer>
   </div>
 
   <!-- 脚本按依赖顺序加载：存储→核心→渲染→输入→分享→入口 -->

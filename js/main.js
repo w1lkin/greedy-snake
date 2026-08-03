@@ -50,23 +50,26 @@
 
   // 渲染「最近记录」列表（ready 与 over 页共用）
   function renderRecords() {
-    var records = SnakeStorage.getRecords();
-    bestEl.textContent = SnakeStorage.getBest();
-    recordsList.innerHTML = '';
-    if (records.length === 0) {
-      var empty = document.createElement('li');
-      empty.textContent = '暂无记录';
-      recordsList.appendChild(empty);
-      return;
-    }
-    records.forEach(function (r) {
-      var li = document.createElement('li');
-      var d = new Date(r.date);
-      var mm = ('0' + (d.getMonth() + 1)).slice(-2);
-      var dd = ('0' + d.getDate()).slice(-2);
-      li.textContent = r.score + ' 分 · ' + mm + '-' + dd;
-      recordsList.appendChild(li);
+    SnakeStorage.getRecords().then(function (records) {
+      bestEl.textContent = SnakeStorage.getBest ? '' : bestEl.textContent;
+      recordsList.innerHTML = '';
+      if (!records || records.length === 0) {
+        var empty = document.createElement('li');
+        empty.textContent = '暂无记录';
+        recordsList.appendChild(empty);
+        return;
+      }
+      records.forEach(function (r) {
+        var li = document.createElement('li');
+        var d = new Date(r.date);
+        var mm = ('0' + (d.getMonth() + 1)).slice(-2);
+        var dd = ('0' + d.getDate()).slice(-2);
+        li.textContent = r.score + ' 分 · ' + mm + '-' + dd;
+        recordsList.appendChild(li);
+      });
     });
+    // 最高分异步刷新
+    SnakeStorage.getBest().then(function (best) { bestEl.textContent = best; }).catch(function () {});
   }
 
   // 进入 ready 状态：展示开始页与历史记录
@@ -123,7 +126,7 @@
     rafId = null;
     btnPause.hidden = true;
     overlayPause.classList.add('hidden');
-    var result = SnakeStorage.addRecord(state.score);
+    var result = SnakeStorage.addRecord(state.score, currentDifficulty);
     finalScoreEl.textContent = state.score;
     finalBestEl.textContent = result.best;
     overlayOver.classList.remove('hidden');
@@ -173,11 +176,13 @@
   btnResume.addEventListener('click', resumeGame);
   btnShare.addEventListener('click', function () {
     if (!state) return;
-    SnakeShare.generate({
-      score: state.score,
-      best: SnakeStorage.getBest(),
-      mount: shareArea
-    });
+    SnakeStorage.getBest().then(function (best) {
+      SnakeShare.generate({
+        score: state.score,
+        best: best,
+        mount: shareArea
+      });
+    }).catch(function () {});
   });
 
   // ---------- 难度选择 ----------
@@ -218,5 +223,11 @@
       if (state) SnakeRender.draw(ctx, state);
     }, 150);
   });
-  toReady();
+  // 硬登录门：未登录不能玩
+  GamePlatform.init();
+  GamePlatform.mountGate({ gameId: 'greedy-snake' }).then(function () {
+    GamePlatform.mountBar(document.getElementById('gp-bar'), { gameId: 'greedy-snake' });
+    GamePlatform.mountLeaderboard(document.getElementById('gp-leaderboard'), { gameId: 'greedy-snake' });
+    toReady();
+  });
 })();
