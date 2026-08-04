@@ -1,5 +1,6 @@
 <template>
-  <div class="bg music" :class="data?'':'c'">
+  <div class="music-icon" :class="data?'on':'off'">
+    <span class="icon">{{data ? '♪' : '✕'}}</span>
   </div>
 </template>
 

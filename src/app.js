@@ -1,13 +1,14 @@
 import Decorate from './components/decorate/index.vue'
-import Guide from './components/guide/index.vue'
 import Music from './components/music/index.vue'
 import Pause from './components/pause/index.vue'
 import Number from './components/number/index.vue'
 import Point from './components/point/index.vue'
 import Keyboard from './components/keyboard/index.vue'
 import Matrix from './components/matrix/index.vue'
+import Guide from './components/guide/index.vue'
+import store from './vuex/store'
 import { mapState } from 'vuex'
-import { transform, lastRecord, i18n, lan } from './unit/const'
+import { transform, i18n, lan } from './unit/const'
 import { visibilityChangeEvent, isFocus } from './unit/'
 import states from './control/states'
 export default {
@@ -20,18 +21,18 @@ export default {
       size: {},
       w: document.documentElement.clientWidth,
       h: document.documentElement.clientHeight,
-      filling: ''
+      filling: 0
     }
   },
   components: {
     Decorate,
-    Guide,
     Music,
     Pause,
     Number,
     Point,
     Keyboard,
-    Matrix
+    Matrix,
+    Guide
   },
   computed: {
     levelLabel: () => i18n.level[lan],
@@ -92,6 +93,12 @@ export default {
           false
         )
       }
+    },
+    toggleWallPass() {
+      store.commit('wallPass', !store.state.wallPass)
+    },
+    changeDifficulty(d) {
+      store.commit('difficulty', d)
     }
   }
 }
