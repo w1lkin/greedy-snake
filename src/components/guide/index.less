@@ -1,0 +1,107 @@
+.guide {
+    position: absolute;
+    left: 115%;
+    right: 115%;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    &.right {
+        right: auto;
+        bottom: 5%;
+    }
+    &.left {
+        left: auto;
+        bottom: 5%;
+    }
+    .settings {
+        text-align: left;
+        color: #005850;
+        font-size: 16px;
+        margin-bottom: 350px;
+        .setting-item {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toggle-switch {
+            width: 40px;
+            height: 22px;
+            background: #364d4b;
+            border-radius: 11px;
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            transition: background 0.2s;
+            &.active {
+                background: #0ec400;
+                .toggle-knob {
+                    left: 20px;
+                }
+            }
+            .toggle-knob {
+                width: 18px;
+                height: 18px;
+                background: #fff;
+                border-radius: 50%;
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                transition: left 0.2s;
+            }
+        }
+        .diff-select {
+            background: #364d4b;
+            color: #acc3c1;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    }
+    &>div {
+        width: 100px;
+        height: 54px;
+        background: #364d4b;
+        display: inline-block;
+        border-radius: 4px;
+        position: relative;
+        color: #acc3c1;
+        font-size: 16px;
+        em {
+            display: block;
+            width: 0;
+            height: 0;
+            border: 6px solid;
+            border-color: transparent transparent #acc3c1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -9px 0 0 -6px;
+        }
+        &:before,
+        &:after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 4px;
+            box-shadow: 0 5px 10px rgba(255, 255, 255, .15) inset;
+        }
+        &:before {
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, .15) inset;
+        }
+    }
+    .up {
+        height: 60px;
+        display: block;
+        margin: 0 auto 2px;
+    }
+    .down {
+        margin: 0 10px;
+    }
+}
