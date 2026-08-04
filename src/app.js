@@ -94,12 +94,6 @@ export default {
           false
         )
       }
-    },
-    toggleWallPass() {
-      store.commit('wallPass', !store.state.wallPass)
-    },
-    changeDifficulty(d) {
-      store.commit('difficulty', d)
     }
   }
 }
