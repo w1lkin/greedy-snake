@@ -15,22 +15,8 @@
       </div>
     </div>
     <div class="guide left">
-      <div class="settings">
-        <div class="setting-row">
-          <span class="setting-label">{{difficultyLabel}}:</span>
-          <div class="diff-btns">
-            <span class="diff-btn" :class="{active: difficulty==='easy'}" @click="$emit('changeDifficulty','easy')">1</span>
-            <span class="diff-btn" :class="{active: difficulty==='normal'}" @click="$emit('changeDifficulty','normal')">2</span>
-            <span class="diff-btn" :class="{active: difficulty==='hard'}" @click="$emit('changeDifficulty','hard')">3</span>
-          </div>
-        </div>
-        <div class="setting-row">
-          <span class="setting-label">{{wallPassLabel}}:</span>
-          <span class="toggle-switch" :class="{active: wallPass}" @click="$emit('toggleWallPass')">
-            <span class="toggle-knob"></span>
-          </span>
-        </div>
-      </div>
+      <p style="clear: both;">{{wallPassLabel}}: {{wallPass ? 'ON' : 'OFF'}}</p>
+      <p style="clear: both;">{{difficultyLabel}}: {{difficultyText}}</p>
     </div>
   </div>
 </template>

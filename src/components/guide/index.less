@@ -1,9 +1,3 @@
-.background(@from, @to) {
-    background: (@from + @to)/2;
-    background: -webkit-gradient(linear, left top, left bottom, from(@from), to(@to));
-    background: -moz-linear-gradient(top, @from, @from);
-}
-
 .guide {
     position: absolute;
     left: 115%;
@@ -18,63 +12,11 @@
     &.left {
         left: auto;
         bottom: 5%;
-    }
-    .settings {
-        text-align: left;
-        margin-bottom: 200px;
-        .setting-row {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .setting-label {
+        p {
             color: #005850;
-            font-size: 16px;
-            white-space: nowrap;
-        }
-        .diff-btns {
-            display: flex;
-            gap: 4px;
-        }
-        .diff-btn {
-            background: #364d4b;
-            color: #acc3c1;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.15s;
-            &.active {
-                background: #0ec400;
-                color: #fff;
-            }
-        }
-        .toggle-switch {
-            width: 40px;
-            height: 22px;
-            background: #364d4b;
-            border-radius: 11px;
-            position: relative;
-            cursor: pointer;
-            display: inline-block;
-            transition: background 0.2s;
-            flex-shrink: 0;
-            &.active {
-                background: #0ec400;
-                .toggle-knob { left: 20px; }
-            }
-            .toggle-knob {
-                width: 18px;
-                height: 18px;
-                background: #fff;
-                border-radius: 50%;
-                position: absolute;
-                top: 2px;
-                left: 2px;
-                transition: left 0.2s;
-            }
+            font-size: 14px;
+            text-align: left;
+            margin: 4px 0;
         }
     }
     &>div {

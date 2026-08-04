@@ -1,6 +1,5 @@
 <template>
-  <div class="music-icon" :class="data?'on':'off'">
-    <span>&#9835;</span>
+  <div class="bg music" :class="data?'':'c'">
   </div>
 </template>
 

@@ -57,6 +57,10 @@ body {
             }
         }
     }
+    .bg {
+        background: url('../static/sprite.png') no-repeat;
+        overflow: hidden;
+    }
 }
 
 * {
@@ -118,26 +122,11 @@ body {
         padding: 10px 0 0;
         white-space: nowrap;
         clear: both;
-        font-size: 14px;
     }
     .bottom {
         position: absolute;
         width: 114px;
         top: 426px;
         left: 0;
-    }
-    .wallpass-indicator {
-        margin-top: 8px;
-        padding: 4px 8px;
-        border-radius: 4px;
-        text-align: center;
-        font-size: 13px;
-        font-weight: bold;
-        background: #555;
-        color: #999;
-        &.active {
-            background: #0ec400;
-            color: #fff;
-        }
     }
 }

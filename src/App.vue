@@ -8,11 +8,8 @@
           <div class="state">
             <Point :cur="status === 'playing'" :max="max" :point="points" />
             <p>{{difficultyLabel}}</p>
-            <Number :number='status === "playing" ? speedRun : 0' :length="3" />
+            <Number :number="speedRun" :length="3" />
             <p>{{wallPassLabel}}</p>
-            <div class="wallpass-indicator" :class="{active: wallPass}">
-              <span>{{wallPass ? 'ON' : 'OFF'}}</span>
-            </div>
             <div class="bottom">
               <Music :data="music" />
               <Pause :data="pause" />
@@ -23,7 +20,7 @@
       </div>
     </div>
     <Keyboard :filling='filling' :wallPass="wallPass" :difficulty="difficulty" />
-    <Guide :wallPass="wallPass" :difficulty="difficulty" @toggleWallPass="toggleWallPass" @changeDifficulty="changeDifficulty" />
+    <Guide :wallPass="wallPass" :difficulty="difficulty" />
   </div>
 </template>
 

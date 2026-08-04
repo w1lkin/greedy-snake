@@ -1,7 +1,5 @@
 <template>
-  <div class="pause-icon" :class="{'c':showPause}">
-    <span>&#10074;&#10074;</span>
-  </div>
+  <div class="bg pause" :class="{'c':showPause}" />
 </template>
 
 <script src="./index.js">

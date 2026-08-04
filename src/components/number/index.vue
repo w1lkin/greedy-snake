@@ -1,8 +1,6 @@
 <template>
   <div class="number">
-    <span v-for="(item,index) in data" :key="index" :class="'d_'+item">
-      {{ item === 'n' ? '' : item === 'd' ? ':' : item === 'd_c' ? ':' : item }}
-    </span>
+    <span v-for="(item,index) in data" :class="'bg s_'+item" :key="index"></span>
   </div>
 </template>
 
