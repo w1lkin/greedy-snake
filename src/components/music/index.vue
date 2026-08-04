@@ -1,6 +1,6 @@
 <template>
   <div class="music-icon" :class="data?'on':'off'">
-    <span class="icon">{{data ? '♪' : '✕'}}</span>
+    <span>&#9835;</span>
   </div>
 </template>
 

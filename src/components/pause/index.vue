@@ -1,6 +1,6 @@
 <template>
-  <div class="pause-icon" :class="{'blink':showPause}">
-    <span class="bars">‖</span>
+  <div class="pause-icon" :class="{'c':showPause}">
+    <span>&#10074;&#10074;</span>
   </div>
 </template>
 

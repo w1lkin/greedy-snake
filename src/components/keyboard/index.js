@@ -3,7 +3,7 @@ import { i18n, lan } from '../../unit/const'
 import store from '../../vuex/store'
 import todo from '../../control/todo'
 export default {
-  props: ['filling'],
+  props: ['filling', 'wallPass', 'difficulty'],
   data() {
     return {
       fillingNum: 0
@@ -37,22 +37,19 @@ export default {
       event.preventDefault();
     });
 
-    // 音效按钮：s -> music
     const todoKeys = {
       up: 'up',
       down: 'down',
       left: 'left',
       right: 'right',
       r: 'r',
-      s: 's',     // 音效
-      p: 'p'      // 暂停
+      s: 's',
+      p: 'p'
     }
 
     Object.keys(todoKeys).forEach(key => {
-      const todoKey = key === 's' ? 's_todo' : key
       const refKey = `dom_${key}`
 
-      // 音效按钮特殊处理：直接切换 music
       if (key === 's') {
         this.$refs[refKey].$el.addEventListener(
           'mousedown',
@@ -141,6 +138,14 @@ export default {
         true
       )
     })
+  },
+  methods: {
+    toggleWallPass() {
+      store.commit('wallPass', !store.state.wallPass)
+    },
+    changeDifficulty(d) {
+      store.commit('difficulty', d)
+    }
   },
   components: {
     Vbutton

@@ -1,11 +1,11 @@
 import Decorate from './components/decorate/index.vue'
+import Guide from './components/guide/index.vue'
 import Music from './components/music/index.vue'
 import Pause from './components/pause/index.vue'
 import Number from './components/number/index.vue'
 import Point from './components/point/index.vue'
 import Keyboard from './components/keyboard/index.vue'
 import Matrix from './components/matrix/index.vue'
-import Guide from './components/guide/index.vue'
 import store from './vuex/store'
 import { mapState } from 'vuex'
 import { transform, i18n, lan } from './unit/const'
@@ -21,21 +21,22 @@ export default {
       size: {},
       w: document.documentElement.clientWidth,
       h: document.documentElement.clientHeight,
-      filling: 0
+      filling: ''
     }
   },
   components: {
     Decorate,
+    Guide,
     Music,
     Pause,
     Number,
     Point,
     Keyboard,
-    Matrix,
-    Guide
+    Matrix
   },
   computed: {
-    levelLabel: () => i18n.level[lan],
+    difficultyLabel: () => i18n.difficulty[lan],
+    wallPassLabel: () => i18n.wallPass[lan],
     ...mapState([
       'snake',
       'food',
