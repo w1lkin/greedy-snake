@@ -1,18 +1,26 @@
 import { COLS, ROWS } from '../../unit/const'
 
+const CANVAS_SIZE = 360
+
 export default {
   props: ['snake', 'food', 'wallPass', 'reset', 'status'],
   data() {
     return {
       canvas: null,
       ctx: null,
-      cellSize: 0
+      cellSize: 0,
+      size: CANVAS_SIZE
     }
   },
   mounted() {
     this.canvas = this.$refs.canvas
     this.ctx = this.canvas.getContext('2d')
+    this.resizeCanvas()
     this.render()
+    window.addEventListener('resize', this.onResize)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize)
   },
   watch: {
     $props: {
@@ -23,30 +31,49 @@ export default {
     }
   },
   methods: {
+    onResize() {
+      this.resizeCanvas()
+      this.render()
+    },
+    resizeCanvas() {
+      if (!this.canvas) return
+      const dpr = window.devicePixelRatio || 1
+      const rect = this.canvas.parentElement.getBoundingClientRect()
+      const w = rect.width - 8
+      this.size = w
+      this.cellSize = Math.floor(w / COLS)
+      const realSize = this.cellSize * COLS
+      this.canvas.style.width = realSize + 'px'
+      this.canvas.style.height = realSize + 'px'
+      this.canvas.width = realSize * dpr
+      this.canvas.height = realSize * dpr
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    },
     render() {
       if (!this.ctx) return
       const ctx = this.ctx
       const canvas = this.canvas
-      const cellSize = Math.floor(canvas.width / COLS)
-      this.cellSize = cellSize
+      const cs = this.cellSize
+      const w = cs * COLS
+      const h = cs * ROWS
 
       // 背景
       ctx.fillStyle = '#9ead86'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillRect(0, 0, w, h)
 
       // 网格线
-      ctx.strokeStyle = '#879372'
-      ctx.lineWidth = 0.5
+      ctx.strokeStyle = 'rgba(135, 147, 114, 0.5)'
+      ctx.lineWidth = 1
       for (let x = 0; x <= COLS; x++) {
         ctx.beginPath()
-        ctx.moveTo(x * cellSize, 0)
-        ctx.lineTo(x * cellSize, ROWS * cellSize)
+        ctx.moveTo(x * cs + 0.5, 0)
+        ctx.lineTo(x * cs + 0.5, h)
         ctx.stroke()
       }
       for (let y = 0; y <= ROWS; y++) {
         ctx.beginPath()
-        ctx.moveTo(0, y * cellSize)
-        ctx.lineTo(COLS * cellSize, y * cellSize)
+        ctx.moveTo(0, y * cs + 0.5)
+        ctx.lineTo(w, y * cs + 0.5)
         ctx.stroke()
       }
 
@@ -68,7 +95,7 @@ export default {
     drawCell(gx, gy, color) {
       const ctx = this.ctx
       const cs = this.cellSize
-      const padding = 1
+      const padding = Math.max(1, Math.floor(cs * 0.1))
       ctx.fillStyle = color
       ctx.fillRect(gx * cs + padding, gy * cs + padding, cs - padding * 2, cs - padding * 2)
     }
@@ -77,7 +104,7 @@ export default {
     return h('div', { class: 'matrix' }, [
       h('canvas', {
         ref: 'canvas',
-        attrs: { width: 220, height: 220 }
+        attrs: { width: this.size, height: this.size }
       })
     ])
   }

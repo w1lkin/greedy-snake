@@ -1,8 +1,15 @@
 .matrix {
-  border: 2px solid #000;
-  padding: 3px 1px 1px 3px;
-  width: 228px;
-  canvas {
-    display: block;
-  }
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #494536;
+    padding: 4px;
+    border-radius: 6px;
+    canvas {
+        display: block;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+    }
 }

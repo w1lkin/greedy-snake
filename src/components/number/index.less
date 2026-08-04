@@ -1,49 +1,27 @@
 .number {
-    height: 24px;
-    font-size: 14px;
-    float: right;
+    display: inline-flex;
+    align-items: center;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    color: #efcc19;
+    background: #494536;
+    padding: 4px 6px;
+    border-radius: 4px;
+    line-height: 1;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
     span {
-        float: left;
-        width: 14px;
-        height: 24px;
-    }
-    .s_0 {
-        background-position: -75px -25px;
-    }
-    .s_1 {
-        background-position: -89px -25px;
-    }
-    .s_2 {
-        background-position: -103px -25px;
-    }
-    .s_3 {
-        background-position: -117px -25px;
-    }
-    .s_4 {
-        background-position: -131px -25px;
-    }
-    .s_5 {
-        background-position: -145px -25px;
-    }
-    .s_6 {
-        background-position: -159px -25px;
-    }
-    .s_7 {
-        background-position: -173px -25px;
-    }
-    .s_8 {
-        background-position: -187px -25px;
-    }
-    .s_9 {
-        background-position: -201px -25px;
-    }
-    .s_n {
-        background-position: -215px -25px;
-    }
-    .s_d {
-        background-position: -243px -25px;
-    }
-    .s_d_c {
-        background-position: -229px -25px;
+        display: inline-block;
+        min-width: 14px;
+        text-align: center;
+        font-size: 18px;
+        &.d_n {
+            min-width: 0;
+            width: 8px;
+        }
+        &.d_d, &.d_d_c {
+            opacity: 0.5;
+            font-size: 14px;
+            min-width: 8px;
+        }
     }
 }

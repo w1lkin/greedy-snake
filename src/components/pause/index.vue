@@ -1,5 +1,7 @@
 <template>
-  <div class="bg pause" :class="{'c':showPause}" />
+  <div class="pause-icon" :class="{'blink':showPause}">
+    <span class="bars">‖</span>
+  </div>
 </template>
 
 <script src="./index.js">
