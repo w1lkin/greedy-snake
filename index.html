@@ -1,97 +1,36 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <!-- 移动端适配：禁止缩放，保证触屏滑动手感 -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="使用 Vue、Vuex 制作的贪吃蛇游戏" />
+  <meta name="keywords" content="贪吃蛇,Snake,Vue,Vuex,JavaScript">
+  <meta name="format-detection" content="telephone=no"/>
+  <script>;(function(){var w=parseInt(window.screen.width),s=w/640,u=navigator.userAgent.toLowerCase(),m='<meta name="viewport" content="width=640,';if(/android (\d+\.\d+)/.test(u)){if(parseFloat(RegExp.$1)>2.3)m+='minimum-scale='+s+',maximum-scale='+s+',';}else{m+='user-scalable=no,';}m+='target-densitydpi=device-dpi">';document.write(m);}());</script>
+  <meta charset="UTF-8">
   <title>贪吃蛇</title>
-  <meta name="api-base" content="https://api.w1lkin.site">
-  <script src="https://api.w1lkin.site/sdk.js"></script>
-  <!-- 像素字体（CDN），离线回退到等宽字体 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="static/loader.css">
 </head>
 <body>
-  <!-- 云端平台栏（登录态/登出）与排行榜浮窗，由 SDK 注入 -->
-
-  <div class="game-shell">
-    <!-- 顶部：标题与分数板 -->
-    <header class="game-header">
-      <h1 class="game-title">贪吃蛇</h1>
-      <div class="score-board">
-        <span>分数 <b id="score">0</b></span>
-        <span>最高 <b id="best">0</b></span>
-        <button id="btn-pause" class="pixel-btn mini" aria-label="暂停" hidden>❚❚</button>
-      </div>
-    </header>
-
-    <!-- 舞台：画布 + 覆盖层 -->
-    <div class="stage">
-      <canvas id="board" width="400" height="400"></canvas>
-
-      <!-- 开始覆盖层 -->
-      <div id="overlay-ready" class="overlay">
-        <h2>贪吃蛇</h2>
-        <p class="tip">方向键 / WASD 或下方方向键控制</p>
-        <div class="diff-group" id="diff-group">
-          <span class="diff-label">难度</span>
-          <button class="diff-btn" data-diff="easy">简单</button>
-          <button class="diff-btn active" data-diff="normal">中等</button>
-          <button class="diff-btn" data-diff="hard">困难</button>
-        </div>
-        <button id="btn-start" class="pixel-btn">开始游戏</button>
-        <div class="records">
-          <h3>最近记录</h3>
-          <ol id="records-list"></ol>
-        </div>
-      </div>
-
-      <!-- 结束覆盖层 -->
-      <div id="overlay-over" class="overlay hidden">
-        <h2>游戏结束</h2>
-        <p>本局分数 <b id="final-score">0</b></p>
-        <p>历史最高 <b id="final-best">0</b></p>
-        <div class="btn-row">
-          <button id="btn-restart" class="pixel-btn">再来一局</button>
-          <button id="btn-share" class="pixel-btn">生成分享卡</button>
-        </div>
-        <!-- 分享卡渲染容器 -->
-        <div id="share-area"></div>
-      </div>
-
-      <!-- 暂停遮罩（覆盖游戏画布区域） -->
-      <div id="overlay-pause" class="overlay hidden">
-        <h2>已暂停</h2>
-        <p class="tip">点击继续，或按空格 / P 键</p>
-        <button id="btn-resume" class="pixel-btn">继续游戏</button>
-      </div>
+  <div id="root">
+    <div class="load">
+      <div class="loader">加载中...</div>
     </div>
-
-    <!-- 屏幕方向键（移动端 / 无键盘场景） -->
-    <div class="dpad" id="dpad">
-      <button class="dpad-btn dpad-up" id="pad-up" aria-label="上">▲</button>
-      <button class="dpad-btn dpad-left" id="pad-left" aria-label="左">◀</button>
-      <button class="dpad-btn dpad-right" id="pad-right" aria-label="右">▶</button>
-      <button class="dpad-btn dpad-down" id="pad-down" aria-label="下">▼</button>
-    </div>
-
-    <footer class="game-footer">键盘 / 方向键双控 · 战绩云端保存</footer>
   </div>
-
-  <!-- 脚本按依赖顺序加载：存储→核心→渲染→输入→分享→入口 -->
-  <script src="js/storage.js"></script>
-  <script src="js/snake.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/input.js"></script>
-  <script src="js/share.js"></script>
-  <script src="js/main.js"></script>
   <a href="https://game-list-arv.pages.dev" class="gp-home-btn" title="主页">🏠</a>
-  <style>
-    .gp-home-btn { position: fixed; top: 12px; right: 12px; z-index: 50;
-      font-size: 18px; text-decoration: none; opacity: 0.35; transition: opacity 0.15s; }
-    .gp-home-btn:active { opacity: 0.7; }
-  </style>
-  </style>
+  <!-- 社交平台 SDK（同步加载，确保 GamePlatform 在游戏逻辑前就绪）-->
+  <script>
+    window.__GP_API_BASE__ = new URLSearchParams(location.search).get('api') || 'https://api.w1lkin.site';
+    document.write('<script src="' + window.__GP_API_BASE__ + '/sdk.js"><\/script>');
+  </script>
+  <script>
+    window.GamePlatform.init();
+    // 硬登录门：未登录跳转门户页登录
+    window.GamePlatform.mountGate({ gameId: 'greedy-snake' }).then(function () {
+      window._gpReady = true;
+    }).catch(function () {
+      window._gpReady = true;
+    });
+  </script>
+  <!-- built files will be auto injected -->
 </body>
 </html>
