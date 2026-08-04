@@ -1,22 +1,17 @@
 .music-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    user-select: none;
-    .icon {
-        font-size: 18px;
-        color: #efcc19;
-        font-weight: bold;
-    }
-    &.on {
-        background: #0ec400;
-    }
-    &.off {
-        background: #555;
-        opacity: 0.6;
-    }
+  width: 25px;
+  height: 21px;
+  position: absolute;
+  top: 2px;
+  left: -12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span {
+    font-size: 16px;
+    color: #efcc19;
+  }
+  &.off {
+    opacity: 0.35;
+  }
 }

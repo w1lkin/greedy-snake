@@ -1,27 +1,23 @@
 .number {
-    display: inline-flex;
-    align-items: center;
-    font-family: "Courier New", monospace;
-    font-weight: bold;
-    color: #efcc19;
-    background: #494536;
-    padding: 4px 6px;
-    border-radius: 4px;
-    line-height: 1;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    height: 24px;
+    font-size: 14px;
+    float: right;
     span {
-        display: inline-block;
-        min-width: 14px;
+        float: left;
+        width: 14px;
+        height: 24px;
         text-align: center;
-        font-size: 18px;
+        font-family: "Courier New", monospace;
+        font-weight: bold;
+        color: #efcc19;
+        line-height: 24px;
         &.d_n {
-            min-width: 0;
-            width: 8px;
+            width: 0;
+            overflow: hidden;
         }
         &.d_d, &.d_d_c {
-            opacity: 0.5;
-            font-size: 14px;
-            min-width: 8px;
+            width: 8px;
+            color: #987f0f;
         }
     }
 }

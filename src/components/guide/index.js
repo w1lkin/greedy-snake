@@ -1,22 +1,23 @@
 import { i18n, lan } from '../../unit/const'
-
-const DIFFICULTY_LABEL = {
-  easy: i18n.level[lan] + ' 1',
-  normal: i18n.level[lan] + ' 2',
-  hard: i18n.level[lan] + ' 3'
-}
-
+import { isMobile } from '../../unit'
 export default {
   name: 'Guide',
   props: ['wallPass', 'difficulty'],
+  data() {
+    return {
+      isMobile: isMobile()
+    }
+  },
   computed: {
-    highestScoreLabel: () => i18n.highestScore[lan],
-    difficultyLabel: () => i18n.difficulty[lan],
-    wallPassLabel: () => i18n.wallPass[lan]
+    wallPassLabel: () => i18n.wallPass[lan],
+    difficultyLabel: () => i18n.difficulty[lan]
+  },
+  mounted() {
+    window.addEventListener('resize', this.resize.bind(this), true)
   },
   methods: {
-    $t(key) {
-      return DIFFICULTY_LABEL[key] || key
+    resize() {
+      this.isMobile = isMobile()
     }
   }
 }

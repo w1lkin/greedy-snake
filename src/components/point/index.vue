@@ -1,12 +1,8 @@
 <template>
-  <div class="point-row">
-    <span class="point-label">{{label}}</span>
-    <Number :number="number" :length="4"/>
+  <div>
+    <p>{{label}}</p>
+    <Number :number="number"/>
   </div>
 </template>
 <script src="./index.js">
 </script>
-
-<style lang="less">
-@import './index.less';
-</style>

@@ -1,52 +1,56 @@
 .decorate {
-  position: relative;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-
   h1 {
+    position: absolute;
+    width: 100%;
+    text-align: center;
     font-weight: normal;
+    top: -12px;
+    left: 0;
     margin: 0;
     padding: 0;
     font-size: 30px;
-    color: #000;
-    z-index: 2;
-    text-align: center;
   }
   .topBorder {
     position: absolute;
     height: 10px;
     width: 100%;
-    top: 0;
-    left: 0;
+    position: absolute;
+    top: 0px;
+    left: 0px;
     overflow: hidden;
-    z-index: 3;
     span {
       display: block;
       width: 10px;
       height: 10px;
       overflow: hidden;
       background: #000;
-      &.mr { margin-right: 10px; }
-      &.ml { margin-left: 10px; }
+      &.mr {
+        margin-right: 10px;
+      }
+      &.ml {
+        margin-left: 10px;
+      }
     }
   }
-  .snake-deco {
+  .view {
     position: absolute;
-    top: 0;
-    width: 40px;
-    height: 100%;
-    svg {
-      width: 100%;
-      height: 100%;
+    right: -70px;
+    top: 20px;
+    width: 44px;
+    em {
+      display: block;
+      width: 22px;
+      height: 22px;
+      overflow: hidden;
+      float: left;
     }
-    &.left {
-      left: 0;
+    p {
+      height: 22px;
+      clear: both;
     }
-    &.right {
-      right: 0;
+    &.l {
+      right: auto;
+      left: -70px;
     }
   }
 }

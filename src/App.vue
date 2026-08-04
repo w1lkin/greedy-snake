@@ -4,24 +4,26 @@
       <Decorate/>
       <div class="screen">
         <div class="panel">
-          <div class="status-bar">
+          <Matrix :snake="snake" :food="food" :wallPass="wallPass" :reset="reset" :status="status" />
+          <div class="state">
             <Point :cur="status === 'playing'" :max="max" :point="points" />
-            <div class="icons">
-              <Music :data="music"/>
-              <Pause :data="pause"/>
+            <p>{{difficultyLabel}}</p>
+            <Number :number='status === "playing" ? speedRun : 0' :length="3" />
+            <p>{{wallPassLabel}}</p>
+            <div class="wallpass-indicator" :class="{active: wallPass}">
+              <span>{{wallPass ? 'ON' : 'OFF'}}</span>
+            </div>
+            <div class="bottom">
+              <Music :data="music" />
+              <Pause :data="pause" />
+              <Number :propTime="true" />
             </div>
           </div>
-          <Matrix :snake="snake" :food="food" :wallPass="wallPass" :reset="reset" :status="status" />
-          <Guide
-            :wallPass="wallPass"
-            :difficulty="difficulty"
-            @toggleWallPass="toggleWallPass"
-            @changeDifficulty="changeDifficulty"
-          />
         </div>
       </div>
     </div>
-    <Keyboard :filling='filling' />
+    <Keyboard :filling='filling' :wallPass="wallPass" :difficulty="difficulty" />
+    <Guide :wallPass="wallPass" :difficulty="difficulty" @toggleWallPass="toggleWallPass" @changeDifficulty="changeDifficulty" />
   </div>
 </template>
 
