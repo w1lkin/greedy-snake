@@ -13,14 +13,8 @@ if (!hasWebAudioAPI.data) {
   musicInitState = false
 }
 
-let maxInitState = lastRecord && !isNaN(parseInt(lastRecord.max, 10))
-  ? parseInt(lastRecord.max, 10)
-  : 0
-if (maxInitState < 0) {
-  maxInitState = 0
-} else if (maxInitState > maxPoint) {
-  maxInitState = maxPoint
-}
+// max 不再从 localStorage 恢复，改为从云端 getMyScores 异步获取
+let maxInitState = 0
 
 let pointsInitState = lastRecord && !isNaN(parseInt(lastRecord.points, 10))
   ? parseInt(lastRecord.points, 10)
