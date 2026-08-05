@@ -9,7 +9,6 @@ export function createSnake() {
   const startY = Math.floor(ROWS / 2)
   const body = []
   for (let i = 0; i < INIT_LEN; i++) {
-    // 从头到尾: 头在最右, 尾在最左, 都向右走
     body.push({ x: startX + i, y: startY })
   }
   return {
@@ -22,7 +21,6 @@ export function createSnake() {
 // 设置方向（禁止180度反向）
 export function setDirection(snake, dir) {
   const cur = snake.direction
-  // 不允许反向
   if (cur.x + dir.x === 0 && cur.y + dir.y === 0) {
     return snake
   }
@@ -45,44 +43,60 @@ export function spawnFood(snake) {
   return empty[Math.floor(Math.random() * empty.length)]
 }
 
-// 前进一步：body 顺序 = [头, ..., 尾]
+// 前进一步
 export function step(snake, food, wallPass) {
   const dir = snake.nextDirection
   const head = snake.body[0]
   let newX = head.x + dir.x
   let newY = head.y + dir.y
 
-  // 穿墙处理
   if (wallPass) {
     if (newX < 0) newX = COLS - 1
     if (newX >= COLS) newX = 0
     if (newY < 0) newY = ROWS - 1
     if (newY >= ROWS) newY = 0
   } else {
-    // 撞墙检测
     if (newX < 0 || newX >= COLS || newY < 0 || newY >= ROWS) {
       return { snake: { ...snake, direction: dir }, food, event: 'dead' }
     }
   }
 
-  // 撞自身检测（不包括尾部，因为尾部会移动走）
+  // 撞自身（不含尾部，因为尾部会移走）
   for (let i = 0; i < snake.body.length - 1; i++) {
     if (snake.body[i].x === newX && snake.body[i].y === newY) {
       return { snake: { ...snake, direction: dir }, food, event: 'dead' }
     }
   }
 
-  // 吃食检测
   const newHead = { x: newX, y: newY }
   const eating = food && newX === food.x && newY === food.y
-  const newBody = [newHead, ...snake.body] // 新头放到数组头部
-  if (!eating) {
-    newBody.pop() // 移除尾部（变短）
-  }
+  const newBody = [newHead, ...snake.body]
+  if (!eating) newBody.pop()
 
   return {
     snake: { body: newBody, direction: dir, nextDirection: dir },
     food: eating ? null : food,
     event: eating ? 'eat' : 'move'
   }
+}
+
+// 将蛇身+食物转为 20x10 矩阵（行列顺序和 tetris 一致：20 行 × 10 列）
+export function toMatrix(snake, food) {
+  const matrix = []
+  for (let y = 0; y < ROWS; y++) {
+    const row = []
+    for (let x = 0; x < COLS; x++) {
+      row.push(0)
+    }
+    matrix.push(row)
+  }
+  if (food) {
+    matrix[food.y][food.x] = 2 // 食物：暗红
+  }
+  if (snake && snake.body) {
+    snake.body.forEach(seg => {
+      matrix[seg.y][seg.x] = 1 // 蛇身：黑色
+    })
+  }
+  return matrix
 }

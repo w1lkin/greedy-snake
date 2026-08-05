@@ -5,11 +5,4 @@ import down from './down'
 import p from './p'
 import r from './r'
 
-export default {
-  left,
-  down,
-  up,
-  right,
-  p,
-  r
-}
+export default { left, down, up, right, p, r }

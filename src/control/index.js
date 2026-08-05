@@ -20,25 +20,17 @@ let keydownActive
 const boardKeys = Object.keys(keyboard).map(e => parseInt(e, 10))
 
 const keyDown = e => {
-  if (e.metaKey === true || boardKeys.indexOf(e.keyCode) === -1) {
-    return
-  }
+  if (e.metaKey === true || boardKeys.indexOf(e.keyCode) === -1) return
   const type = keyboard[e.keyCode]
-  if (type === keydownActive) {
-    return
-  }
+  if (type === keydownActive) return
   keydownActive = type
   todo[type].down(store)
 }
 
 const keyUp = e => {
-  if (e.metaKey === true || boardKeys.indexOf(e.keyCode) === -1) {
-    return
-  }
+  if (e.metaKey === true || boardKeys.indexOf(e.keyCode) === -1) return
   const type = keyboard[e.keyCode]
-  if (type === keydownActive) {
-    keydownActive = ''
-  }
+  if (type === keydownActive) keydownActive = ''
   todo[type].up(store)
 }
 

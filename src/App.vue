@@ -4,11 +4,17 @@
       <Decorate/>
       <div class="screen">
         <div class="panel">
-          <Matrix :snake="snake" :food="food" :reset="reset" :status="status" />
+          <Matrix :propMatrix="matrix" />
           <div class="state">
-            <Point :cur="status === 'playing'" :max="max" :point="points" />
+            <Point :cur="status==='playing'" :max="max" :point="points" />
+            <p>{{foodLabel}}</p>
+            <Number :number="foodCount" />
             <p>{{difficultyLabel}}</p>
             <Number :number="difficultyCode" :length="1" />
+            <p>{{wallPassLabel}}</p>
+            <div class="wall-indicator" :class="{on: wallPass}">
+              <span>{{wallPass ? 'ON' : 'OFF'}}</span>
+            </div>
             <div class="bottom">
               <Music :data="music" />
               <Pause :data="pause" />

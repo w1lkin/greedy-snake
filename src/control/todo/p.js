@@ -11,6 +11,9 @@ const downFn = store => {
       if (state.lock) return
       if (state.status === 'playing') {
         states.pause(!state.pause)
+      } else if (state.status === 'gameover') {
+        states.overEnd()
+        states.start()
       } else {
         states.start()
       }

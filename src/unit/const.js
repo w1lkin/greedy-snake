@@ -1,7 +1,7 @@
 import i18nJSON from '../i18n.json'
 
-// 网格尺寸
-export const COLS = 20
+// 网格尺寸（对标 tetris 的 10x20）
+export const COLS = 10
 export const ROWS = 20
 
 // 方向常量
@@ -14,9 +14,9 @@ export const DIR = {
 
 // 难度配置: [初始速度(ms), 最低速度(ms), 每吃食物加速(ms)]
 export const DIFFICULTIES = {
-  easy: { tickInterval: 160, minTick: 110, speedStep: 2 },
-  normal: { tickInterval: 120, minTick: 60, speedStep: 4 },
-  hard: { tickInterval: 80, minTick: 40, speedStep: 6 }
+  easy: { tickInterval: 200, minTick: 140, speedStep: 3 },
+  normal: { tickInterval: 150, minTick: 80, speedStep: 5 },
+  hard: { tickInterval: 100, minTick: 50, speedStep: 7 }
 }
 
 // 分数
@@ -29,13 +29,9 @@ export const StorageKey = 'VUE_SNAKE'
 // 上次记录
 export const lastRecord = (() => {
   let data = window.localStorage.getItem(StorageKey)
-  if (!data) {
-    return false
-  }
+  if (!data) return false
   try {
-    if (window.btoa) {
-      data = atob(data)
-    }
+    if (window.btoa) data = atob(data)
     data = decodeURIComponent(data)
     data = JSON.parse(data)
   } catch (e) {
@@ -48,14 +44,8 @@ export const lastRecord = (() => {
 })()
 
 // CSS transform 兼容
-export const transform = (function() {
-  const trans = [
-    'transform',
-    'webkitTransform',
-    'msTransform',
-    'mozTransform',
-    'oTransform'
-  ]
+export const transform = (function () {
+  const trans = ['transform', 'webkitTransform', 'msTransform', 'mozTransform', 'oTransform']
   const body = document.body
   return trans.filter(e => body.style[e] !== undefined)[0]
 })()

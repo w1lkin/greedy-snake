@@ -8,19 +8,18 @@ const downFn = store => {
   store.commit('key_up', true)
   event.down({
     key: 'up',
-    begin: 100,
-    interval: 50,
+    begin: 150,
+    interval: 80,
     callback: () => {
       const state = store.state
       if (state.lock) return
       if (state.snake && state.status === 'playing') {
-        if (state.pause) {
-          states.pause(false)
-          return
-        }
+        if (state.pause) { states.pause(false); return }
         if (music.move) music.move()
-        const snake = setDirection(state.snake, DIR.UP)
-        store.commit('snake', snake)
+        store.commit('snake', setDirection(state.snake, DIR.UP))
+      } else {
+        // 非游戏状态：切换穿墙
+        store.commit('wallPass', !state.wallPass)
       }
     }
   })
