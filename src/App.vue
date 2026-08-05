@@ -9,10 +9,6 @@
             <Point :cur="status === 'playing'" :max="max" :point="points" />
             <p>{{difficultyLabel}}</p>
             <Number :number="difficultyCode" :length="1" />
-            <p>{{wallPassLabel}}</p>
-            <div class="wall-indicator" :class="{on: wallPass}">
-              <span>{{wallPass ? 'ON' : 'OFF'}}</span>
-            </div>
             <div class="bottom">
               <Music :data="music" />
               <Pause :data="pause" />

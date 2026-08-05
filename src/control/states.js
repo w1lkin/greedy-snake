@@ -5,12 +5,27 @@ import { music } from '../unit/music'
 
 const states = {
   tickInterval: null,
+  overTimeout: null,
+
+  // 重置到 ready 状态
+  resetToReady: () => {
+    clearTimeout(states.tickInterval)
+    clearTimeout(states.overTimeout)
+    store.commit('snake', null)
+    store.commit('food', null)
+    store.commit('status', 'ready')
+    store.commit('reset', false)
+    store.commit('lock', false)
+    store.commit('points', 0)
+  },
 
   // 游戏开始
   start: () => {
     if (music.start) {
       music.start()
     }
+    clearTimeout(states.tickInterval)
+    clearTimeout(states.overTimeout)
     const state = store.state
     const snake = createSnake()
     const food = spawnFood(snake, state.wallPass)
@@ -48,12 +63,10 @@ const states = {
         if (newPoints > state.max) {
           store.commit('max', newPoints)
         }
-        // 加速
         const diff = DIFFICULTIES[state.difficulty]
         let newSpeed = state.speedRun - diff.speedStep
         if (newSpeed < diff.minTick) newSpeed = diff.minTick
         store.commit('speedRun', newSpeed)
-        // 生成新食物
         const newFood = spawnFood(result.snake, state.wallPass)
         store.commit('food', newFood)
       }
@@ -73,14 +86,16 @@ const states = {
     )
   },
 
-  // 暂停
+  // 暂停/恢复
   pause: isPause => {
     store.commit('pause', isPause)
     if (isPause) {
       clearTimeout(states.tickInterval)
       return
     }
-    states.auto()
+    if (store.state.status === 'playing') {
+      states.auto()
+    }
   },
 
   // 焦点变化
@@ -99,10 +114,10 @@ const states = {
   // 游戏结束动画开始
   overStart: (shouldSubmit) => {
     clearTimeout(states.tickInterval)
-    store.commit('lock', true)
     store.commit('reset', true)
     store.commit('status', 'gameover')
     store.commit('pause', false)
+    store.commit('lock', true)
 
     if (music.death) {
       music.death()
@@ -110,24 +125,32 @@ const states = {
 
     if (shouldSubmit) {
       const finalPoints = store.state.points
-      if (finalPoints <= 0) return
-      const trySubmit = (retries) => {
-        if (window.GamePlatform && typeof window.GamePlatform.submitScore === 'function') {
-          window.GamePlatform.submitScore('greedy-snake', finalPoints)
-            .then(() => { console.log('[greedy-snake] score submitted:', finalPoints) })
-            .catch((e) => { console.warn('[greedy-snake] submitScore failed:', e && e.message) })
-        } else if (retries > 0) {
-          setTimeout(() => trySubmit(retries - 1), 1000)
-        } else {
-          console.warn('[greedy-snake] GamePlatform SDK not available after retries, score not submitted:', finalPoints)
+      if (finalPoints > 0) {
+        const trySubmit = (retries) => {
+          if (window.GamePlatform && typeof window.GamePlatform.submitScore === 'function') {
+            window.GamePlatform.submitScore('greedy-snake', finalPoints)
+              .then(() => { console.log('[greedy-snake] score submitted:', finalPoints) })
+              .catch((e) => { console.warn('[greedy-snake] submitScore failed:', e && e.message) })
+          } else if (retries > 0) {
+            setTimeout(() => trySubmit(retries - 1), 1000)
+          } else {
+            console.warn('[greedy-snake] GamePlatform SDK not available after retries, score not submitted:', finalPoints)
+          }
         }
+        trySubmit(5)
       }
-      trySubmit(5)
     }
+
+    // 延迟调用 overEnd 解锁
+    clearTimeout(states.overTimeout)
+    states.overTimeout = setTimeout(() => {
+      states.overEnd()
+    }, 1200)
   },
 
   // 游戏结束动画完成
   overEnd: () => {
+    clearTimeout(states.tickInterval)
     store.commit('snake', null)
     store.commit('food', null)
     store.commit('status', 'ready')
