@@ -3,7 +3,7 @@ import { i18n, lan } from '../../unit/const'
 import store from '../../vuex/store'
 import todo from '../../control/todo'
 export default {
-  props: ['filling', 'wallPass', 'difficulty'],
+  props: ['filling'],
   data() {
     return {
       fillingNum: 0
@@ -37,20 +37,22 @@ export default {
       event.preventDefault();
     });
 
-    const todoKeys = {
-      up: 'up',
-      down: 'down',
-      left: 'left',
-      right: 'right',
-      r: 'r',
-      s: 's',
-      p: 'p'
+    // 映射 todo key 到 ref key
+    const keyMap = {
+      up: 'dom_up',
+      down: 'dom_down',
+      left: 'dom_left',
+      right: 'dom_right',
+      r: 'dom_r',
+      s: 'dom_s',
+      p: 'dom_p'
     }
 
-    Object.keys(todoKeys).forEach(key => {
-      const refKey = `dom_${key}`
+    Object.keys(keyMap).forEach(key => {
+      const refKey = keyMap[key]
 
       if (key === 's') {
+        // 音效按钮：直接切换
         this.$refs[refKey].$el.addEventListener(
           'mousedown',
           () => {
@@ -138,14 +140,6 @@ export default {
         true
       )
     })
-  },
-  methods: {
-    toggleWallPass() {
-      store.commit('wallPass', !store.state.wallPass)
-    },
-    changeDifficulty(d) {
-      store.commit('difficulty', d)
-    }
   },
   components: {
     Vbutton

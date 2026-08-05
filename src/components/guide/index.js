@@ -1,15 +1,8 @@
 import { i18n, lan } from '../../unit/const'
 import { isMobile } from '../../unit'
-
-const DIFF_TEXT = {
-  easy: '1 (Easy)',
-  normal: '2 (Normal)',
-  hard: '3 (Hard)'
-}
-
+import store from '../../vuex/store'
 export default {
   name: 'Guide',
-  props: ['wallPass', 'difficulty'],
   data() {
     return {
       isMobile: isMobile()
@@ -17,10 +10,7 @@ export default {
   },
   computed: {
     wallPassLabel: () => i18n.wallPass[lan],
-    difficultyLabel: () => i18n.difficulty[lan],
-    difficultyText() {
-      return DIFF_TEXT[this.difficulty] || this.difficulty
-    }
+    difficultyLabel: () => i18n.difficulty[lan]
   },
   mounted() {
     window.addEventListener('resize', this.resize.bind(this), true)
@@ -28,6 +18,12 @@ export default {
   methods: {
     resize() {
       this.isMobile = isMobile()
+    },
+    toggleWallPass() {
+      store.commit('wallPass', !store.state.wallPass)
+    },
+    setDifficulty(d) {
+      store.commit('difficulty', d)
     }
   }
 }
