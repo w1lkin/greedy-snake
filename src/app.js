@@ -10,6 +10,13 @@ import { mapState } from 'vuex'
 import { transform, i18n, lan } from './unit/const'
 import { visibilityChangeEvent, isFocus } from './unit/'
 import states from './control/states'
+
+const DIFFICULTY_CODE = {
+  easy: 1,
+  normal: 2,
+  hard: 3
+}
+
 export default {
   mounted() {
     this.render()
@@ -36,6 +43,9 @@ export default {
   computed: {
     difficultyLabel: () => i18n.difficulty[lan],
     wallPassLabel: () => i18n.wallPass[lan],
+    difficultyCode() {
+      return DIFFICULTY_CODE[this.difficulty] || 2
+    },
     ...mapState([
       'snake',
       'food',

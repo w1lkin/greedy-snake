@@ -12,7 +12,8 @@
           arrow="translate(0, 63px)"
           :position="true"
           :active="keyboard['up']"
-          ref="dom_up"
+          @touchstart.native.prevent="onUpDown" @mousedown.native="onUpDown"
+          @touchend.native="onUpUp" @mouseup.native="onUpUp" @mouseleave.native="onUpUp"
         />
         <vbutton
           color="blue"
@@ -22,7 +23,8 @@
           :label="labelDown"
           arrow="translate(0,-71px) rotate(180deg)"
           :active="keyboard['down']"
-          ref="dom_down"
+          @touchstart.native.prevent="onDownDown" @mousedown.native="onDownDown"
+          @touchend.native="onDownUp" @mouseup.native="onDownUp" @mouseleave.native="onDownUp"
         />
         <vbutton
           color="blue"
@@ -32,7 +34,8 @@
           :label="labelLeft"
           arrow="translate(60px, -12px) rotate(270deg)"
           :active="keyboard['left']"
-          ref="dom_left"
+          @touchstart.native.prevent="onLeftDown" @mousedown.native="onLeftDown"
+          @touchend.native="onLeftUp" @mouseup.native="onLeftUp" @mouseleave.native="onLeftUp"
         />
         <vbutton
           color="blue"
@@ -42,7 +45,8 @@
           :label="labelRight"
           arrow="translate(-60px, -12px) rotate(90deg)"
           :active="keyboard['right']"
-          ref="dom_right"
+          @touchstart.native.prevent="onRightDown" @mousedown.native="onRightDown"
+          @touchend.native="onRightUp" @mouseup.native="onRightUp" @mouseleave.native="onRightUp"
         />
         <vbutton
           color="red"
@@ -51,7 +55,7 @@
           :left="196"
           :label="labelResetR"
           :active="keyboard['reset']"
-          ref="dom_r"
+          @touchstart.native.prevent="onReset" @mousedown.native="onReset"
         />
         <vbutton
           color="green"
@@ -60,7 +64,7 @@
           :left="106"
           :label="labelSoundS"
           :active="keyboard['music']"
-          ref="dom_s"
+          @touchstart.native.prevent="onMusic" @mousedown.native="onMusic"
         />
         <vbutton
           color="green"
@@ -69,7 +73,7 @@
           :left="16"
           :label="labelPauseP"
           :active="keyboard['pause']"
-          ref="dom_p"
+          @touchstart.native.prevent="onPause" @mousedown.native="onPause"
         />
       </div>
 </template>

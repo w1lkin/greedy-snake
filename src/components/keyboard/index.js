@@ -29,117 +29,23 @@ export default {
     labelSoundS: () => `${i18n.sound[lan]}(S)`,
     labelPauseP: () => `${i18n.pause[lan]}(P)`
   },
-  mounted() {
-    const touchEventCatch = {}
-    const mouseDownEventCatch = {}
-
-    document.addEventListener('gesturestart', (event) => {
-      event.preventDefault();
-    });
-
-    // 映射 todo key 到 ref key
-    const keyMap = {
-      up: 'dom_up',
-      down: 'dom_down',
-      left: 'dom_left',
-      right: 'dom_right',
-      r: 'dom_r',
-      s: 'dom_s',
-      p: 'dom_p'
+  methods: {
+    onUpDown() { todo.up.down(store) },
+    onUpUp() { todo.up.up(store) },
+    onDownDown() { todo.down.down(store) },
+    onDownUp() { todo.down.up(store) },
+    onLeftDown() { todo.left.down(store) },
+    onLeftUp() { todo.left.up(store) },
+    onRightDown() { todo.right.down(store) },
+    onRightUp() { todo.right.up(store) },
+    onReset() { todo.r.down(store) },
+    onPause() { todo.p.down(store) },
+    onMusic() {
+      if (store.state.lock) return
+      store.commit('music', !store.state.music)
+      store.commit('key_music', true)
+      setTimeout(() => store.commit('key_music', false), 150)
     }
-
-    Object.keys(keyMap).forEach(key => {
-      const refKey = keyMap[key]
-
-      if (key === 's') {
-        // 音效按钮：直接切换
-        this.$refs[refKey].$el.addEventListener(
-          'mousedown',
-          () => {
-            if (touchEventCatch[key] === true) return
-            if (store.state.lock) return
-            store.commit('music', !store.state.music)
-            store.commit('key_music', true)
-            mouseDownEventCatch[key] = true
-          },
-          true
-        )
-        this.$refs[refKey].$el.addEventListener(
-          'mouseup',
-          () => {
-            store.commit('key_music', false)
-            mouseDownEventCatch[key] = false
-          },
-          true
-        )
-        this.$refs[refKey].$el.addEventListener(
-          'touchstart',
-          (e) => {
-            e.preventDefault()
-            if (store.state.lock) return
-            store.commit('music', !store.state.music)
-            store.commit('key_music', true)
-          },
-          true
-        )
-        this.$refs[refKey].$el.addEventListener(
-          'touchend',
-          () => {
-            store.commit('key_music', false)
-          },
-          true
-        )
-        return
-      }
-
-      if (!todo[key]) return
-
-      this.$refs[refKey].$el.addEventListener(
-        'mousedown',
-        () => {
-          if (touchEventCatch[key] === true) return
-          todo[key].down(store)
-          mouseDownEventCatch[key] = true
-        },
-        true
-      )
-      this.$refs[refKey].$el.addEventListener(
-        'mouseup',
-        () => {
-          if (touchEventCatch[key] === true) {
-            touchEventCatch[key] = false
-            return
-          }
-          todo[key].up(store)
-          mouseDownEventCatch[key] = false
-        },
-        true
-      )
-      this.$refs[refKey].$el.addEventListener(
-        'mouseout',
-        () => {
-          if (mouseDownEventCatch[key] === true) {
-            todo[key].up(store)
-          }
-        },
-        true
-      )
-      this.$refs[refKey].$el.addEventListener(
-        'touchstart',
-        () => {
-          touchEventCatch[key] = true
-          todo[key].down(store)
-        },
-        true
-      )
-      this.$refs[refKey].$el.addEventListener(
-        'touchend',
-        () => {
-          todo[key].up(store)
-        },
-        true
-      )
-    })
   },
   components: {
     Vbutton

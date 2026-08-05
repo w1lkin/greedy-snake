@@ -3,16 +3,17 @@ import { COLS, ROWS, DIR } from './const'
 // 蛇初始长度
 const INIT_LEN = 3
 
-// 创建初始蛇状态
+// 创建初始蛇状态：body[0] = 头, body[length-1] = 尾
 export function createSnake() {
   const startX = Math.floor(COLS / 2)
   const startY = Math.floor(ROWS / 2)
-  const snake = []
-  for (let i = INIT_LEN - 1; i >= 0; i--) {
-    snake.push({ x: startX - i, y: startY })
+  const body = []
+  for (let i = 0; i < INIT_LEN; i++) {
+    // 从头到尾: 头在最右, 尾在最左, 都向右走
+    body.push({ x: startX + i, y: startY })
   }
   return {
-    body: snake,
+    body,
     direction: DIR.RIGHT,
     nextDirection: DIR.RIGHT
   }
@@ -29,7 +30,7 @@ export function setDirection(snake, dir) {
 }
 
 // 随机生成食物
-export function spawnFood(snake, wallPass) {
+export function spawnFood(snake) {
   const body = snake.body
   const occupied = new Set(body.map(p => `${p.x},${p.y}`))
   const empty = []
@@ -44,10 +45,10 @@ export function spawnFood(snake, wallPass) {
   return empty[Math.floor(Math.random() * empty.length)]
 }
 
-// 前进一步，返回 { snake, food, event: 'move'|'eat'|'dead' }
+// 前进一步：body 顺序 = [头, ..., 尾]
 export function step(snake, food, wallPass) {
   const dir = snake.nextDirection
-  const head = snake.body[snake.body.length - 1]
+  const head = snake.body[0]
   let newX = head.x + dir.x
   let newY = head.y + dir.y
 
@@ -64,7 +65,7 @@ export function step(snake, food, wallPass) {
     }
   }
 
-  // 撞自身检测（不包括尾部，因为尾部会移动）
+  // 撞自身检测（不包括尾部，因为尾部会移动走）
   for (let i = 0; i < snake.body.length - 1; i++) {
     if (snake.body[i].x === newX && snake.body[i].y === newY) {
       return { snake: { ...snake, direction: dir }, food, event: 'dead' }
@@ -74,9 +75,9 @@ export function step(snake, food, wallPass) {
   // 吃食检测
   const newHead = { x: newX, y: newY }
   const eating = food && newX === food.x && newY === food.y
-  const newBody = [...snake.body, newHead]
+  const newBody = [newHead, ...snake.body] // 新头放到数组头部
   if (!eating) {
-    newBody.shift() // 移除尾部
+    newBody.pop() // 移除尾部（变短）
   }
 
   return {
