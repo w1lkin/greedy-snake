@@ -71,13 +71,6 @@
           :active="keyboard['pause']"
           ref="dom_p"
         />
-        <!-- 移动端：难度切换 -->
-        <div class="mobile-settings">
-          <span class="mob-btn" :class="{active: difficulty==='easy'}" @click="changeDifficulty('easy')">1</span>
-          <span class="mob-btn" :class="{active: difficulty==='normal'}" @click="changeDifficulty('normal')">2</span>
-          <span class="mob-btn" :class="{active: difficulty==='hard'}" @click="changeDifficulty('hard')">3</span>
-          <span class="mob-btn toggle" :class="{active: wallPass}" @click="toggleWallPass">{{wallPass?'WP':'--'}}</span>
-        </div>
       </div>
 </template>
 <style lang="less">
