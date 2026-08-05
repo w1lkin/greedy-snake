@@ -1,29 +1,27 @@
 import store from '../vuex/store'
-import { createSnake, spawnFood, step } from '../unit/snake'
-import { DIFFICULTIES, SCORE_PER_FOOD } from '../unit/const'
+import { createSnake, spawnFood, step, toMatrix } from '../unit/snake'
+import { DIFFICULTIES, SCORE_PER_FOOD, ROWS } from '../unit/const'
 import { music } from '../unit/music'
 
 const states = {
   tickInterval: null,
   overTimeout: null,
 
-  // 重置到 ready 状态
-  resetToReady: () => {
+  resetToReady() {
     clearTimeout(states.tickInterval)
     clearTimeout(states.overTimeout)
     store.commit('snake', null)
     store.commit('food', null)
+    store.commit('matrix', [])
     store.commit('status', 'ready')
     store.commit('reset', false)
     store.commit('lock', false)
     store.commit('points', 0)
+    store.commit('foodCount', 0)
   },
 
-  // 游戏开始
-  start: () => {
-    if (music.start) {
-      music.start()
-    }
+  start() {
+    if (music.start) music.start()
     clearTimeout(states.tickInterval)
     clearTimeout(states.overTimeout)
     const state = store.state
@@ -34,24 +32,25 @@ const states = {
     store.commit('food', food)
     store.commit('speedRun', diff.tickInterval)
     store.commit('points', 0)
+    store.commit('foodCount', 0)
     store.commit('status', 'playing')
     store.commit('lock', false)
     store.commit('pause', false)
     store.commit('reset', false)
+    store.commit('matrix', toMatrix(snake, food))
     states.auto()
   },
 
-  // 自动前进
-  auto: timeout => {
+  auto(timeout) {
     const out = timeout < 0 ? 0 : timeout
-    let state = store.state
     const tick = () => {
-      state = store.state
+      const state = store.state
       if (state.status !== 'playing' || state.pause) return
       const result = step(state.snake, state.food, state.wallPass)
       store.commit('snake', result.snake)
 
       if (result.event === 'dead') {
+        store.commit('matrix', toMatrix(result.snake, state.food))
         states.overStart(true)
         return
       }
@@ -60,9 +59,8 @@ const states = {
         if (music.eat) music.eat()
         const newPoints = state.points + SCORE_PER_FOOD
         store.commit('points', newPoints)
-        if (newPoints > state.max) {
-          store.commit('max', newPoints)
-        }
+        store.commit('foodCount', state.foodCount + 1)
+        if (newPoints > state.max) store.commit('max', newPoints)
         const diff = DIFFICULTIES[state.difficulty]
         let newSpeed = state.speedRun - diff.speedStep
         if (newSpeed < diff.minTick) newSpeed = diff.minTick
@@ -75,88 +73,93 @@ const states = {
         if (music.move) music.move()
       }
 
+      store.commit('matrix', toMatrix(store.state.snake, store.state.food))
+
       clearTimeout(states.tickInterval)
-      states.tickInterval = setTimeout(tick, state.speedRun)
+      states.tickInterval = setTimeout(tick, store.state.speedRun)
     }
 
     clearTimeout(states.tickInterval)
-    states.tickInterval = setTimeout(
-      tick,
-      out === undefined ? store.state.speedRun : out
-    )
+    states.tickInterval = setTimeout(tick, out === undefined ? store.state.speedRun : out)
   },
 
-  // 暂停/恢复
-  pause: isPause => {
+  pause(isPause) {
     store.commit('pause', isPause)
-    if (isPause) {
-      clearTimeout(states.tickInterval)
-      return
-    }
-    if (store.state.status === 'playing') {
-      states.auto()
-    }
+    if (isPause) { clearTimeout(states.tickInterval); return }
+    if (store.state.status === 'playing') states.auto()
   },
 
-  // 焦点变化
-  focus: isFocus => {
+  focus(isFocus) {
     store.commit('focus', isFocus)
-    if (!isFocus) {
-      clearTimeout(states.tickInterval)
-      return
-    }
+    if (!isFocus) { clearTimeout(states.tickInterval); return }
     const state = store.state
-    if (state.status === 'playing' && !state.pause && !state.reset) {
-      states.auto()
-    }
+    if (state.status === 'playing' && !state.pause && !state.reset) states.auto()
   },
 
-  // 游戏结束动画开始
-  overStart: (shouldSubmit) => {
+  overStart(shouldSubmit) {
     clearTimeout(states.tickInterval)
     store.commit('reset', true)
     store.commit('status', 'gameover')
     store.commit('pause', false)
     store.commit('lock', true)
 
-    if (music.death) {
-      music.death()
-    }
+    if (music.death) music.death()
 
     if (shouldSubmit) {
       const finalPoints = store.state.points
       if (finalPoints > 0) {
-        const trySubmit = (retries) => {
+        const trySubmit = retries => {
           if (window.GamePlatform && typeof window.GamePlatform.submitScore === 'function') {
             window.GamePlatform.submitScore('greedy-snake', finalPoints)
               .then(() => { console.log('[greedy-snake] score submitted:', finalPoints) })
-              .catch((e) => { console.warn('[greedy-snake] submitScore failed:', e && e.message) })
+              .catch(e => { console.warn('[greedy-snake] submitScore failed:', e && e.message) })
           } else if (retries > 0) {
             setTimeout(() => trySubmit(retries - 1), 1000)
-          } else {
-            console.warn('[greedy-snake] GamePlatform SDK not available after retries, score not submitted:', finalPoints)
           }
         }
         trySubmit(5)
       }
     }
 
-    // 延迟调用 overEnd 解锁
-    clearTimeout(states.overTimeout)
-    states.overTimeout = setTimeout(() => {
-      states.overEnd()
-    }, 1200)
+    // 结束动画：逐行填充 → 延迟调用 overEnd
+    const animateOver = () => {
+      const matrix = store.state.matrix
+      if (!matrix.length) {
+        // 没有矩阵数据，直接 overEnd
+        clearTimeout(states.overTimeout)
+        states.overTimeout = setTimeout(() => states.overEnd(), 800)
+        return
+      }
+      const newMatrix = JSON.parse(JSON.stringify(matrix))
+      let row = ROWS - 1
+      const fillStep = () => {
+        if (row < 0) {
+          clearTimeout(states.overTimeout)
+          states.overTimeout = setTimeout(() => states.overEnd(), 300)
+          return
+        }
+        for (let x = 0; x < newMatrix[row].length; x++) {
+          newMatrix[row][x] = 2 // 暗红色填充
+        }
+        store.commit('matrix', newMatrix)
+        row--
+        states.overTimeout = setTimeout(fillStep, 60)
+      }
+      fillStep()
+    }
+    animateOver()
   },
 
-  // 游戏结束动画完成
-  overEnd: () => {
+  overEnd() {
     clearTimeout(states.tickInterval)
     store.commit('snake', null)
     store.commit('food', null)
+    store.commit('matrix', [])
     store.commit('status', 'ready')
     store.commit('reset', false)
     store.commit('lock', false)
     store.commit('points', 0)
+    store.commit('foodCount', 0)
   }
 }
 

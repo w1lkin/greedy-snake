@@ -15,17 +15,17 @@
       </div>
     </div>
     <div class="guide left">
-      <p>{{difficultyLabel}}:
-        <span class="diff-btn" :class="{active: $store.state.difficulty==='easy'}" @click="setDifficulty('easy')">1</span>
-        <span class="diff-btn" :class="{active: $store.state.difficulty==='normal'}" @click="setDifficulty('normal')">2</span>
-        <span class="diff-btn" :class="{active: $store.state.difficulty==='hard'}" @click="setDifficulty('hard')">3</span>
-      </p>
-      <p>{{wallPassLabel}}:
-        <span class="toggle-switch" :class="{active: $store.state.wallPass}" @click="toggleWallPass">
-          <span class="toggle-knob"></span>
-        </span>
+      <p>
+        <a href="https://github.com/Binaryify/vue-tetris" rel="noopener noreferrer" target="_blank" v-bind="{title:linkTitle}">{{github}}:</a>
+        <br />
+        <iframe src="https://ghbtns.com/github-btn.html?user=Binaryify&repo=vue-tetris&type=star&count=true" frameBorder="0" scrolling="0" width="170px" height="20px" style="transform: scale(1.68);transform-origin: center left" />
+        <br />
+        <iframe src="https://ghbtns.com/github-btn.html?user=Binaryify&repo=vue-tetris&type=fork&count=true" frameBorder="0" scrolling="0" width="170px" height="20px" style="transform: scale(1.68);transform-origin: center left" />
       </p>
       <div class="space">SPACE</div>
+    </div>
+    <div class="guide qr">
+      <img :src="QRSrc" v-bind="{title:QRTitle,alt:QRCode}" />
     </div>
   </div>
 </template>

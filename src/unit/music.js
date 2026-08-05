@@ -1,5 +1,4 @@
 import store from '../vuex/store'
-// 使用 Web Audio API
 const AudioContext =
   window.AudioContext ||
   window.webkitAudioContext ||
@@ -13,9 +12,7 @@ export const hasWebAudioAPI = {
 
 export const music = {}
 ;(() => {
-  if (!hasWebAudioAPI.data) {
-    return
-  }
+  if (!hasWebAudioAPI.data) return
   const url = './static/music.mp3'
   const context = new AudioContext()
   const req = new XMLHttpRequest()
@@ -23,63 +20,42 @@ export const music = {}
   req.responseType = 'arraybuffer'
 
   req.onload = () => {
-    context.decodeAudioData(
-      req.response,
-      buf => {
-        // 将拿到的audio解码转为buffer
-        const getSource = () => {
-          // 创建source源。
-          const source = context.createBufferSource()
-          source.buffer = buf
-          source.connect(context.destination)
-          return source
-        }
-
-        music.killStart = () => {
-          // 游戏开始的音乐只播放一次
-          music.start = () => {}
-        }
-
-        music.start = () => {
-          // 游戏开始
-          music.killStart()
-          if (!store.state.music) {
-            return
-          }
-          getSource().start(0, 3.7202, 3.6224)
-        }
-
-        music.eat = () => {
-          // 吃食物
-          if (!store.state.music) {
-            return
-          }
-          getSource().start(0, 0, 0.7675)
-        }
-
-        music.death = () => {
-          // 游戏结束
-          if (!store.state.music) {
-            return
-          }
-          getSource().start(0, 8.1276, 1.1437)
-        }
-
-        music.move = () => {
-          // 移动
-          if (!store.state.music) {
-            return
-          }
-          getSource().start(0, 2.9088, 0.1437)
-        }
-      },
-      error => {
-        if (window.console && window.console.error) {
-          window.console.error(`音频: ${url} 读取错误`, error)
-          hasWebAudioAPI.data = false
-        }
+    context.decodeAudioData(req.response, buf => {
+      const getSource = () => {
+        const source = context.createBufferSource()
+        source.buffer = buf
+        source.connect(context.destination)
+        return source
       }
-    )
+
+      music.killStart = () => { music.start = () => {} }
+
+      music.start = () => {
+        music.killStart()
+        if (!store.state.music) return
+        getSource().start(0, 3.7202, 3.6224)
+      }
+
+      music.eat = () => {
+        if (!store.state.music) return
+        getSource().start(0, 0, 0.7675)
+      }
+
+      music.death = () => {
+        if (!store.state.music) return
+        getSource().start(0, 8.1276, 1.1437)
+      }
+
+      music.move = () => {
+        if (!store.state.music) return
+        getSource().start(0, 2.9088, 0.1437)
+      }
+    }, error => {
+      if (window.console && window.console.error) {
+        window.console.error(`音频: ${url} 读取错误`, error)
+        hasWebAudioAPI.data = false
+      }
+    })
   }
 
   req.send()

@@ -6,56 +6,38 @@ import { lastRecord, maxPoint, DIFFICULTIES } from '../unit/const'
 import { hasWebAudioAPI } from '../unit/music'
 Vue.use(Vuex)
 
-let musicInitState = lastRecord && lastRecord.music !== undefined
-  ? !!lastRecord.music
-  : true
-if (!hasWebAudioAPI.data) {
-  musicInitState = false
-}
+let musicInitState = lastRecord && lastRecord.music !== undefined ? !!lastRecord.music : true
+if (!hasWebAudioAPI.data) musicInitState = false
 
-// max 不再从 localStorage 恢复，改为从云端 getMyScores 异步获取
-let maxInitState = 0
+let maxInitState = lastRecord && !isNaN(parseInt(lastRecord.max, 10)) ? parseInt(lastRecord.max, 10) : 0
+if (maxInitState < 0) maxInitState = 0
+else if (maxInitState > maxPoint) maxInitState = maxPoint
 
-let pointsInitState = lastRecord && !isNaN(parseInt(lastRecord.points, 10))
-  ? parseInt(lastRecord.points, 10)
-  : 0
-if (pointsInitState < 0) {
-  pointsInitState = 0
-} else if (pointsInitState > maxPoint) {
-  pointsInitState = maxPoint
-}
+let pointsInitState = lastRecord && !isNaN(parseInt(lastRecord.points, 10)) ? parseInt(lastRecord.points, 10) : 0
+if (pointsInitState < 0) pointsInitState = 0
+else if (pointsInitState > maxPoint) pointsInitState = maxPoint
 
-const difficultyInitState = lastRecord && lastRecord.difficulty &&
-  DIFFICULTIES[lastRecord.difficulty]
-  ? lastRecord.difficulty
-  : 'normal'
+const difficultyInitState = lastRecord && lastRecord.difficulty && DIFFICULTIES[lastRecord.difficulty]
+  ? lastRecord.difficulty : 'normal'
 
-const wallPassInitState = lastRecord && lastRecord.wallPass !== undefined
-  ? !!lastRecord.wallPass
-  : false
+const wallPassInitState = lastRecord && lastRecord.wallPass !== undefined ? !!lastRecord.wallPass : false
 
-const lockInitState = lastRecord && lastRecord.lock !== undefined
-  ? !!lastRecord.lock
-  : false
-
-const pauseInitState = lastRecord && lastRecord.pause !== undefined
-  ? !!lastRecord.pause
-  : false
-
-const resetInitState = lastRecord && lastRecord.reset
-  ? !!lastRecord.reset
-  : false
+const lockInitState = lastRecord && lastRecord.lock !== undefined ? !!lastRecord.lock : false
+const pauseInitState = lastRecord && lastRecord.pause !== undefined ? !!lastRecord.pause : false
+const resetInitState = lastRecord && lastRecord.reset ? !!lastRecord.reset : false
 
 const state = {
   // 游戏核心
-  snake: null,          // { body, direction, nextDirection }
-  food: null,           // { x, y }
+  snake: null,
+  food: null,
   wallPass: wallPassInitState,
+  matrix: [], // 20x10 矩阵（用于 matrix 组件渲染和动画）
 
   // 游戏控制
-  status: 'ready',      // ready | playing | gameover
+  status: 'ready',  // ready | playing | gameover
   difficulty: difficultyInitState,
   speedRun: DIFFICULTIES[difficultyInitState].tickInterval,
+  foodCount: 0,     // 已吃食物数
 
   // 分数
   points: pointsInitState,
@@ -67,18 +49,7 @@ const state = {
   reset: resetInitState,
   lock: lockInitState,
   focus: isFocus(),
-  keyboard: {
-    up: false,
-    down: false,
-    left: false,
-    right: false,
-    reset: false,
-    music: false,
-    pause: false
-  }
+  keyboard: { up: false, down: false, left: false, right: false, reset: false, music: false, pause: false }
 }
 
-export default new Vuex.Store({
-  state,
-  mutations
-})
+export default new Vuex.Store({ state, mutations })

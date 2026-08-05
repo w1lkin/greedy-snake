@@ -11,11 +11,7 @@ import { transform, i18n, lan } from './unit/const'
 import { visibilityChangeEvent, isFocus } from './unit/'
 import states from './control/states'
 
-const DIFFICULTY_CODE = {
-  easy: 1,
-  normal: 2,
-  hard: 3
-}
+const DIFFICULTY_CODE = { easy: 1, normal: 2, hard: 3 }
 
 export default {
   mounted() {
@@ -30,49 +26,25 @@ export default {
       filling: ''
     }
   },
-  components: {
-    Decorate,
-    Guide,
-    Music,
-    Pause,
-    Number,
-    Point,
-    Keyboard,
-    Matrix
-  },
+  components: { Decorate, Guide, Music, Pause, Number, Point, Keyboard, Matrix },
   computed: {
+    foodLabel: () => i18n.foodCount[lan],
     difficultyLabel: () => i18n.difficulty[lan],
     wallPassLabel: () => i18n.wallPass[lan],
-    difficultyCode() {
-      return DIFFICULTY_CODE[this.difficulty] || 2
-    },
+    difficultyCode() { return DIFFICULTY_CODE[this.difficulty] || 2 },
     ...mapState([
-      'snake',
-      'food',
-      'wallPass',
-      'status',
-      'difficulty',
-      'speedRun',
-      'points',
-      'max',
-      'reset',
-      'pause',
-      'music',
-      'keyboard'
+      'matrix', 'wallPass', 'status', 'difficulty', 'speedRun',
+      'points', 'max', 'reset', 'pause', 'music', 'keyboard', 'foodCount'
     ])
   },
   methods: {
     render() {
       let filling = 0
       const size = (() => {
-        const w = this.w
-        const h = this.h
-        const ratio = h / w
-        let scale
-        let css = {}
-        if (ratio < 1.5) {
-          scale = h / 960
-        } else {
+        const w = this.w, h = this.h, ratio = h / w
+        let scale, css = {}
+        if (ratio < 1.5) { scale = h / 960 }
+        else {
           scale = w / 640
           filling = (h - 960 * scale) / scale / 3
           css = {
@@ -95,13 +67,7 @@ export default {
     },
     start() {
       if (visibilityChangeEvent) {
-        document.addEventListener(
-          visibilityChangeEvent,
-          () => {
-            states.focus(isFocus())
-          },
-          false
-        )
+        document.addEventListener(visibilityChangeEvent, () => { states.focus(isFocus()) }, false)
       }
     }
   }

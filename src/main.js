@@ -2,53 +2,28 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './vuex/store'
 
-import './unit/const';
-import './control';
-import { subscribeRecord } from './unit';
-import states from './control/states';
+import './unit/const'
+import './control'
+import { subscribeRecord } from './unit'
+import states from './control/states'
 
-subscribeRecord(store); // 将更新的状态记录到localStorage
+subscribeRecord(store)
 
-// 从云端获取历史最高分（不再从 localStorage 读取）
-const initMaxFromCloud = () => {
-  if (window.GamePlatform && typeof window.GamePlatform.getMyScores === 'function') {
-    window.GamePlatform.getMyScores('greedy-snake', 200).then(items => {
-      if (items && items.length > 0) {
-        const best = Math.max(...items.map(it => it.score));
-        store.commit('max', best);
-      }
-    }).catch(() => {});
-  }
-};
-initMaxFromCloud();
-
-// 等待 GamePlatform 就绪后再开始游戏
-const tryStart = (retries) => {
-  const state = store.state
-  if (state.status === 'ready') {
-    states.start()
-    return
-  }
-  if (retries > 0) {
-    setTimeout(() => tryStart(retries - 1), 200)
-  }
-}
-
-// 用户首次点击/触摸后开始游戏
+// 首次用户交互后自动开始游戏
 let started = false
 const startOnce = () => {
   if (started) return
   started = true
-  tryStart(20)
+  states.start()
 }
-document.addEventListener('touchstart', startOnce, { once: false })
-document.addEventListener('mousedown', startOnce, { once: false })
-document.addEventListener('keydown', startOnce, { once: false })
+document.addEventListener('touchstart', startOnce, { once: true })
+document.addEventListener('mousedown', startOnce, { once: true })
+document.addEventListener('keydown', startOnce, { once: true })
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#root',
   render: h => h(App),
-  store: store
+  store
 })

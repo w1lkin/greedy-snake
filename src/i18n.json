@@ -8,15 +8,45 @@
       "fr": "S E R P E N T",
       "fa": "مار"
     },
+    "github": {
+      "cn": "GitHub",
+      "en": "GitHub",
+      "fr": "GitHub",
+      "fa": "گیت‌هاب"
+    },
+    "linkTitle": {
+      "cn": "查看源代码",
+      "en": "View data source",
+      "fr": "Afficher la source des données",
+      "fa": "مشاهده سورس پروژه"
+    },
+    "QRCode": {
+      "cn": "二维码",
+      "en": "QR code",
+      "fr": "QR code",
+      "fa": "کیوآر کد"
+    },
+    "QRNotice": {
+      "cn": "扫一扫用手机玩",
+      "en": "Scan QR code to play with a mobile phone",
+      "fr": "Numérisez le code QR pour jouer avec un téléphone mobile",
+      "fa": "اسکن کیوآر کد برای بازی در تلفن همراه"
+    },
+    "titleCenter": {
+      "cn": "贪吃蛇<br />SNAKE",
+      "en": "SNAKE",
+      "fr": "SERPENT",
+      "fa": "مار"
+    },
     "point": {
       "cn": "得分",
-      "en": "Score",
+      "en": "Point",
       "fr": "Score",
       "fa": "امتیاز"
     },
     "highestScore": {
       "cn": "最高分",
-      "en": "Best",
+      "en": "Max",
       "fr": "Max",
       "fa": "حداکثر"
     },
@@ -26,11 +56,35 @@
       "fr": "Dernier Tour",
       "fa": "آخرین دور"
     },
+    "foodCount": {
+      "cn": "食物数",
+      "en": "Food",
+      "fr": "Nourriture",
+      "fa": "غذا"
+    },
     "level": {
-      "cn": "难度",
+      "cn": "级别",
       "en": "Level",
       "fr": "Difficulté",
       "fa": "سطح"
+    },
+    "difficulty": {
+      "cn": "难度",
+      "en": "Difficulty",
+      "fr": "Difficulté",
+      "fa": "سختی"
+    },
+    "wallPass": {
+      "cn": "穿墙",
+      "en": "Wall Pass",
+      "fr": "Traverser",
+      "fa": "عبور از دیوار"
+    },
+    "next": {
+      "cn": "穿墙",
+      "en": "Wall Pass",
+      "fr": "Traverser",
+      "fa": "عبور از دیوار"
     },
     "pause": {
       "cn": "暂停",
@@ -50,41 +104,35 @@
       "fr": "Réinitialiser",
       "fa": "ریست"
     },
-    "up": {
-      "cn": "上",
-      "en": "Up",
-      "fr": "Haut",
-      "fa": "بالا"
+    "rotation": {
+      "cn": "旋转",
+      "en": "Rotation",
+      "fr": "Rotation",
+      "fa": "چرخش"
     },
     "left": {
-      "cn": "左",
+      "cn": "左移",
       "en": "Left",
       "fr": "Gauche",
       "fa": "چپ"
     },
     "right": {
-      "cn": "右",
+      "cn": "右移",
       "en": "Right",
       "fr": "Droite",
       "fa": "راست"
     },
     "down": {
-      "cn": "下",
+      "cn": "下移",
       "en": "Down",
       "fr": "Bas",
       "fa": "پایین"
     },
-    "wallPass": {
-      "cn": "穿墙模式",
-      "en": "Wall Pass",
-      "fr": "Traverser",
-      "fa": "عبور از دیوار"
-    },
-    "difficulty": {
-      "cn": "难度",
-      "en": "Difficulty",
-      "fr": "Difficulté",
-      "fa": "سختی"
+    "drop": {
+      "cn": "掉落",
+      "en": "Drop",
+      "fr": "Tomber",
+      "fa": "سقوط"
     }
   }
 }

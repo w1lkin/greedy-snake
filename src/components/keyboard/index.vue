@@ -75,20 +75,6 @@
           :active="keyboard['pause']"
           @touchstart.native.prevent.stop="onPause" @mousedown.native.prevent.stop="onPause"
         />
-        <!-- 移动端：穿墙模式开关 -->
-        <div class="mob-row">
-          <span class="mob-label">{{wallPassLabel}}:</span>
-          <span class="mob-toggle" :class="{on: wallPass}" @touchstart.native.prevent.stop="onToggleWall" @click.native.stop="onToggleWall">
-            <span class="knob"></span>
-          </span>
-        </div>
-        <!-- 移动端：难度切换 -->
-        <div class="mob-row">
-          <span class="mob-label">{{difficultyLabel}}:</span>
-          <span class="mob-btn" :class="{active: difficulty==='easy'}" @touchstart.native.prevent.stop="setDiff('easy')" @click.native.stop="setDiff('easy')">1</span>
-          <span class="mob-btn" :class="{active: difficulty==='normal'}" @touchstart.native.prevent.stop="setDiff('normal')" @click.native.stop="setDiff('normal')">2</span>
-          <span class="mob-btn" :class="{active: difficulty==='hard'}" @touchstart.native.prevent.stop="setDiff('hard')" @click.native.stop="setDiff('hard')">3</span>
-        </div>
       </div>
 </template>
 <style lang="less">

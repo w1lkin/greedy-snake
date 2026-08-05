@@ -1,6 +1,5 @@
 import { i18n, lan } from '../../unit/const'
 import { isMobile } from '../../unit'
-import store from '../../vuex/store'
 export default {
   name: 'Guide',
   data() {
@@ -9,8 +8,13 @@ export default {
     }
   },
   computed: {
-    wallPassLabel: () => i18n.wallPass[lan],
-    difficultyLabel: () => i18n.difficulty[lan]
+    linkTitle: () => i18n.linkTitle[lan],
+    github: () => i18n.github[lan],
+    QRCode: () => i18n.QRCode[lan],
+    QRTitle: () => i18n.QRNotice[lan],
+    QRSrc: () =>
+      window.location.protocol +
+      '//raw.githubusercontent.com/Binaryify/vue-tetris/master/static/qr.jpeg'
   },
   mounted() {
     window.addEventListener('resize', this.resize.bind(this), true)
@@ -18,12 +22,6 @@ export default {
   methods: {
     resize() {
       this.isMobile = isMobile()
-    },
-    toggleWallPass() {
-      store.commit('wallPass', !store.state.wallPass)
-    },
-    setDifficulty(d) {
-      store.commit('difficulty', d)
     }
   }
 }
