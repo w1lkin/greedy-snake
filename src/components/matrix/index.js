@@ -4,13 +4,15 @@ export default {
   props: ['snake', 'food', 'reset', 'status'],
   render() {
     const grid = this.buildGrid()
+    const cls = 'matrix' + (this.reset ? ' reset' : '')
     return (
-      <div class="matrix" class={this.reset ? 'reset' : ''}>
+      <div class={cls}>
         {grid.map((row, k1) =>
-          <p>
-            {row.map((cell, k2) =>
-              <b class={(cell === 1 ? 'c' : '') + (cell === 2 ? 'd' : '')} />
-            )}
+          <p key={k1}>
+            {row.map((cell, k2) => {
+              const cellCls = (cell === 1 ? 'c' : '') + ' ' + (cell === 2 ? 'd' : '')
+              return <b key={k2} class={cellCls} />
+            })}
           </p>
         )}
       </div>
@@ -26,11 +28,9 @@ export default {
         }
         grid.push(row)
       }
-      // 食物 (暗红)
       if (this.food) {
         grid[this.food.y][this.food.x] = 2
       }
-      // 蛇身 (黑色)
       if (this.snake && this.snake.body) {
         this.snake.body.forEach(seg => {
           grid[seg.y][seg.x] = 1
