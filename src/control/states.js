@@ -1,6 +1,6 @@
 import store from '../vuex/store'
 import { createSnake, spawnFood, step, toMatrix } from '../unit/snake'
-import { DIFFICULTIES, SCORE_PER_FOOD, ROWS } from '../unit/const'
+import { DIFFICULTIES, SCORE_PER_FOOD, COLS, ROWS } from '../unit/const'
 import { music } from '../unit/music'
 
 const states = {
@@ -65,7 +65,7 @@ const states = {
         let newSpeed = state.speedRun - diff.speedStep
         if (newSpeed < diff.minTick) newSpeed = diff.minTick
         store.commit('speedRun', newSpeed)
-        const newFood = spawnFood(result.snake, state.wallPass)
+        const newFood = spawnFood(result.snake)
         store.commit('food', newFood)
       }
 
@@ -102,7 +102,6 @@ const states = {
     store.commit('reset', true)
     store.commit('status', 'gameover')
     store.commit('pause', false)
-    // 注意：不设 lock=true，否则用户按 P/R 无法重启
 
     if (music.death) music.death()
 
@@ -122,25 +121,31 @@ const states = {
       }
     }
 
-    // 结束动画：逐行暗红填充
-    const matrix = store.state.matrix
-    if (!matrix.length) {
-      states.overTimeout = setTimeout(() => states.overEnd(), 800)
-      return
+    // 结束动画：全屏逐行暗红填充
+    const baseMatrix = store.state.matrix.length ? store.state.matrix : []
+    const newMatrix = []
+    for (let y = 0; y < ROWS; y++) {
+      const row = []
+      for (let x = 0; x < COLS; x++) {
+        row.push(baseMatrix[y] ? baseMatrix[y][x] || 0 : 0)
+      }
+      newMatrix.push(row)
     }
-    const newMatrix = JSON.parse(JSON.stringify(matrix))
-    let row = ROWS - 1
+    let row = 0
     const fillStep = () => {
-      if (row < 0) {
-        states.overTimeout = setTimeout(() => states.overEnd(), 300)
+      if (row >= ROWS) {
+        states.overTimeout = setTimeout(() => {
+          store.commit('matrix', [])
+          states.overTimeout = setTimeout(() => states.overEnd(), 300)
+        }, 500)
         return
       }
-      for (let x = 0; x < newMatrix[row].length; x++) {
+      for (let x = 0; x < COLS; x++) {
         newMatrix[row][x] = 2
       }
-      store.commit('matrix', newMatrix)
-      row--
-      states.overTimeout = setTimeout(fillStep, 60)
+      store.commit('matrix', JSON.parse(JSON.stringify(newMatrix)))
+      row++
+      states.overTimeout = setTimeout(fillStep, 50)
     }
     fillStep()
   },

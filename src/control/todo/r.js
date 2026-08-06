@@ -15,6 +15,7 @@ const downFn = store => {
       } else {
         states.start()
       }
+      event.up({ key: 'r' })
     }
   })
 }
