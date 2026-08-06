@@ -98,10 +98,11 @@ const states = {
 
   overStart(shouldSubmit) {
     clearTimeout(states.tickInterval)
+    clearTimeout(states.overTimeout)
     store.commit('reset', true)
     store.commit('status', 'gameover')
     store.commit('pause', false)
-    store.commit('lock', true)
+    // 注意：不设 lock=true，否则用户按 P/R 无法重启
 
     if (music.death) music.death()
 
@@ -121,37 +122,32 @@ const states = {
       }
     }
 
-    // 结束动画：逐行填充 → 延迟调用 overEnd
-    const animateOver = () => {
-      const matrix = store.state.matrix
-      if (!matrix.length) {
-        // 没有矩阵数据，直接 overEnd
-        clearTimeout(states.overTimeout)
-        states.overTimeout = setTimeout(() => states.overEnd(), 800)
+    // 结束动画：逐行暗红填充
+    const matrix = store.state.matrix
+    if (!matrix.length) {
+      states.overTimeout = setTimeout(() => states.overEnd(), 800)
+      return
+    }
+    const newMatrix = JSON.parse(JSON.stringify(matrix))
+    let row = ROWS - 1
+    const fillStep = () => {
+      if (row < 0) {
+        states.overTimeout = setTimeout(() => states.overEnd(), 300)
         return
       }
-      const newMatrix = JSON.parse(JSON.stringify(matrix))
-      let row = ROWS - 1
-      const fillStep = () => {
-        if (row < 0) {
-          clearTimeout(states.overTimeout)
-          states.overTimeout = setTimeout(() => states.overEnd(), 300)
-          return
-        }
-        for (let x = 0; x < newMatrix[row].length; x++) {
-          newMatrix[row][x] = 2 // 暗红色填充
-        }
-        store.commit('matrix', newMatrix)
-        row--
-        states.overTimeout = setTimeout(fillStep, 60)
+      for (let x = 0; x < newMatrix[row].length; x++) {
+        newMatrix[row][x] = 2
       }
-      fillStep()
+      store.commit('matrix', newMatrix)
+      row--
+      states.overTimeout = setTimeout(fillStep, 60)
     }
-    animateOver()
+    fillStep()
   },
 
   overEnd() {
     clearTimeout(states.tickInterval)
+    clearTimeout(states.overTimeout)
     store.commit('snake', null)
     store.commit('food', null)
     store.commit('matrix', [])
