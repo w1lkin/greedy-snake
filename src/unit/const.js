@@ -12,12 +12,11 @@ export const DIR = {
   RIGHT: { x: 1, y: 0 }
 }
 
-// 难度配置: [初始速度(ms), 最低速度(ms), 每吃食物加速(ms)]
-export const DIFFICULTIES = {
-  easy: { tickInterval: 200, minTick: 140, speedStep: 3 },
-  normal: { tickInterval: 150, minTick: 80, speedStep: 5 },
-  hard: { tickInterval: 100, minTick: 50, speedStep: 7 }
-}
+// 6档速度（对标 tetris，每吃 5 个食物升一级）
+export const speeds = [200, 160, 130, 100, 75, 55]
+
+// 每吃 N 个食物自动升级
+export const eachFoods = 5
 
 // 分数
 export const SCORE_PER_FOOD = 10

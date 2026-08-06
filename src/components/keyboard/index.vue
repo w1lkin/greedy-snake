@@ -55,7 +55,8 @@
           :left="196"
           :label="labelResetR"
           :active="keyboard['reset']"
-          @touchstart.native.prevent.stop="onReset" @mousedown.native.prevent.stop="onReset"
+          @touchstart.native.prevent.stop="onResetDown" @mousedown.native.prevent.stop="onResetDown"
+          @touchend.native="onResetUp" @mouseup.native="onResetUp" @mouseleave.native="onResetUp"
         />
         <vbutton
           color="green"
@@ -64,7 +65,8 @@
           :left="106"
           :label="labelSoundS"
           :active="keyboard['music']"
-          @touchstart.native.prevent.stop="onMusic" @mousedown.native.prevent.stop="onMusic"
+          @touchstart.native.prevent.stop="onMusicDown" @mousedown.native.prevent.stop="onMusicDown"
+          @touchend.native="onMusicUp" @mouseup.native="onMusicUp" @mouseleave.native="onMusicUp"
         />
         <vbutton
           color="green"
@@ -73,7 +75,8 @@
           :left="16"
           :label="labelPauseP"
           :active="keyboard['pause']"
-          @touchstart.native.prevent.stop="onPause" @mousedown.native.prevent.stop="onPause"
+          @touchstart.native.prevent.stop="onPauseDown" @mousedown.native.prevent.stop="onPauseDown"
+          @touchend.native="onPauseUp" @mouseup.native="onPauseUp" @mouseleave.native="onPauseUp"
         />
       </div>
 </template>

@@ -1,28 +1,32 @@
 import event from '../../unit/event'
 import states from '../states'
 
-const downFn = store => {
+const down = store => {
   store.commit('key_reset', true)
-  event.down({
-    key: 'r',
-    once: true,
-    callback: () => {
-      if (store.state.status === 'playing') {
+  if (store.state.lock) return
+  if (store.state.snake !== null) {
+    event.down({
+      key: 'r',
+      once: true,
+      callback: () => {
         states.overStart(true)
-      } else if (store.state.status === 'gameover') {
-        states.overEnd()
-        states.start()
-      } else {
+      }
+    })
+  } else {
+    event.down({
+      key: 'r',
+      once: true,
+      callback: () => {
+        if (store.state.lock) return
         states.start()
       }
-      event.up({ key: 'r' })
-    }
-  })
+    })
+  }
 }
 
-const upFn = store => {
+const up = store => {
   store.commit('key_reset', false)
   event.up({ key: 'r' })
 }
 
-export default { down: downFn, up: upFn }
+export default { down, up }

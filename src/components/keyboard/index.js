@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     keyboard() { return this.$store.state.keyboard },
-    labelUp: () => i18n.rotation[lan],       // 复用"旋转"标签文本
+    labelUp: () => i18n.rotation[lan],
     labelLeft: () => i18n.left[lan],
     labelRight: () => i18n.right[lan],
     labelDown: () => i18n.down[lan],
@@ -53,22 +53,32 @@ export default {
       todo.right.down(store)
     },
     onRightEnd() { fired.right = false; store.commit('key_right', false); todo.right.up(store) },
-    onReset(e) {
+    onResetDown(e) {
       if (e) e.preventDefault()
-      // 统一走 todo.r.down（和键盘 R 键一致）
+      store.commit('key_reset', true)
       todo.r.down(store)
     },
-    onPause(e) {
+    onResetUp() {
+      store.commit('key_reset', false)
+      todo.r.up(store)
+    },
+    onPauseDown(e) {
       if (e) e.preventDefault()
-      // 统一走 todo.p.down（和键盘 Space/P 键一致）
+      store.commit('key_pause', true)
       todo.p.down(store)
     },
-    onMusic(e) {
+    onPauseUp() {
+      store.commit('key_pause', false)
+      todo.p.up(store)
+    },
+    onMusicDown(e) {
       if (e) e.preventDefault()
       if (store.state.lock) return
       store.commit('music', !store.state.music)
       store.commit('key_music', true)
-      setTimeout(() => store.commit('key_music', false), 150)
+    },
+    onMusicUp() {
+      store.commit('key_music', false)
     }
   },
   components: { Vbutton }
