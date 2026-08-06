@@ -12,25 +12,11 @@ import { transform, i18n, lan } from './unit/const'
 import { visibilityChangeEvent, isFocus } from './unit/'
 import states from './control/states'
 
-const DIFFICULTY_CODE = { easy: 1, normal: 2, hard: 3 }
-
 export default {
   mounted() {
     this.render()
     window.addEventListener('resize', this.resize.bind(this), true)
-    // 首次用户交互自动开始游戏
-    let autoStarted = false
-    const startOnce = () => {
-      if (autoStarted) return
-      autoStarted = true
-      const s = this.$store.state
-      if (s.status === 'ready' && !s.lock) {
-        states.start()
-      }
-    }
-    document.addEventListener('touchstart', startOnce, { once: true })
-    document.addEventListener('mousedown', startOnce, { once: true })
-    document.addEventListener('keydown', startOnce, { once: true })
+    states.entranceAnimation()
   },
   data() {
     return {
@@ -43,11 +29,10 @@ export default {
   components: { Decorate, Guide, Music, Pause, Number, Point, Keyboard, Matrix, Logo },
   computed: {
     foodLabel: () => i18n.foodCount[lan],
-    difficultyLabel: () => i18n.difficulty[lan],
+    levelLabel: () => i18n.level[lan],
     wallPassLabel: () => i18n.wallPass[lan],
-    difficultyCode() { return DIFFICULTY_CODE[this.difficulty] || 2 },
     ...mapState([
-      'matrix', 'wallPass', 'status', 'difficulty', 'speedRun',
+      'matrix', 'wallPass', 'status', 'speedRun',
       'points', 'max', 'reset', 'pause', 'music', 'keyboard', 'foodCount'
     ])
   },

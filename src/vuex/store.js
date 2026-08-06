@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
 import { isFocus } from '../unit/'
-import { lastRecord, maxPoint, DIFFICULTIES } from '../unit/const'
+import { lastRecord, maxPoint, speeds } from '../unit/const'
 import { hasWebAudioAPI } from '../unit/music'
 Vue.use(Vuex)
 
@@ -17,8 +17,11 @@ let pointsInitState = lastRecord && !isNaN(parseInt(lastRecord.points, 10)) ? pa
 if (pointsInitState < 0) pointsInitState = 0
 else if (pointsInitState > maxPoint) pointsInitState = maxPoint
 
-const difficultyInitState = lastRecord && lastRecord.difficulty && DIFFICULTIES[lastRecord.difficulty]
-  ? lastRecord.difficulty : 'normal'
+// 初始速度等级（0-5）
+let speedStartInit = lastRecord && !isNaN(parseInt(lastRecord.speedStart, 10))
+  ? parseInt(lastRecord.speedStart, 10) : 1
+if (speedStartInit < 0) speedStartInit = 0
+if (speedStartInit > 5) speedStartInit = 5
 
 const wallPassInitState = lastRecord && lastRecord.wallPass !== undefined ? !!lastRecord.wallPass : false
 
@@ -31,13 +34,21 @@ const state = {
   snake: null,
   food: null,
   wallPass: wallPassInitState,
-  matrix: [], // 20x10 矩阵（用于 matrix 组件渲染和动画）
+  matrix: (() => {
+    const m = []
+    for (let y = 0; y < 20; y++) {
+      const row = []
+      for (let x = 0; x < 10; x++) row.push(0)
+      m.push(row)
+    }
+    return m
+  })(),
 
   // 游戏控制
-  status: 'ready',  // ready | playing | gameover
-  difficulty: difficultyInitState,
-  speedRun: DIFFICULTIES[difficultyInitState].tickInterval,
-  foodCount: 0,     // 已吃食物数
+  status: 'ready',
+  speedStart: speedStartInit,  // 初始速度等级 (0-5)
+  speedRun: speedStartInit,    // 当前速度等级 (0-5，游戏中进行加速)
+  foodCount: 0,
 
   // 分数
   points: pointsInitState,

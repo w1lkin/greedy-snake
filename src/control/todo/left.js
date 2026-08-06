@@ -2,9 +2,9 @@ import { setDirection } from '../../unit/snake'
 import event from '../../unit/event'
 import states from '../states'
 import { music } from '../../unit/music'
-import { DIR, DIFFICULTIES } from '../../unit/const'
+import { DIR } from '../../unit/const'
 
-const downFn = store => {
+const down = store => {
   store.commit('key_left', true)
   event.down({
     key: 'left',
@@ -18,19 +18,18 @@ const downFn = store => {
         if (music.move) music.move()
         store.commit('snake', setDirection(state.snake, DIR.LEFT))
       } else {
-        // 非游戏状态：调整难度
-        const diffs = Object.keys(DIFFICULTIES)
-        const idx = diffs.indexOf(state.difficulty)
-        const nextIdx = (idx - 1 + diffs.length) % diffs.length
-        store.commit('difficulty', diffs[nextIdx])
+        // 非游戏状态：循环调整级别 (1→6→1)
+        const next = state.speedStart === 0 ? 5 : state.speedStart - 1
+        store.commit('speedStart', next)
+        store.commit('speedRun', next)
       }
     }
   })
 }
 
-const upFn = store => {
+const up = store => {
   store.commit('key_left', false)
   event.up({ key: 'left' })
 }
 
-export default { down: downFn, up: upFn }
+export default { down, up }

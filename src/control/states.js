@@ -1,6 +1,6 @@
 import store from '../vuex/store'
 import { createSnake, spawnFood, step, toMatrix } from '../unit/snake'
-import { DIFFICULTIES, SCORE_PER_FOOD, COLS, ROWS } from '../unit/const'
+import { speeds, eachFoods, SCORE_PER_FOOD, COLS, ROWS } from '../unit/const'
 import { music } from '../unit/music'
 
 const states = {
@@ -27,10 +27,9 @@ const states = {
     const state = store.state
     const snake = createSnake()
     const food = spawnFood(snake)
-    const diff = DIFFICULTIES[state.difficulty]
     store.commit('snake', snake)
     store.commit('food', food)
-    store.commit('speedRun', diff.tickInterval)
+    store.commit('speedRun', state.speedStart)
     store.commit('points', 0)
     store.commit('foodCount', 0)
     store.commit('status', 'playing')
@@ -61,10 +60,10 @@ const states = {
         store.commit('points', newPoints)
         store.commit('foodCount', state.foodCount + 1)
         if (newPoints > state.max) store.commit('max', newPoints)
-        const diff = DIFFICULTIES[state.difficulty]
-        let newSpeed = state.speedRun - diff.speedStep
-        if (newSpeed < diff.minTick) newSpeed = diff.minTick
-        store.commit('speedRun', newSpeed)
+        // 每吃 eachFoods 个食物，自动升一级（加速）
+        if (state.foodCount % eachFoods === 0 && state.speedRun < 5) {
+          store.commit('speedRun', state.speedRun + 1)
+        }
         const newFood = spawnFood(result.snake)
         store.commit('food', newFood)
       }
@@ -76,11 +75,11 @@ const states = {
       store.commit('matrix', toMatrix(store.state.snake, store.state.food))
 
       clearTimeout(states.tickInterval)
-      states.tickInterval = setTimeout(tick, store.state.speedRun)
+      states.tickInterval = setTimeout(tick, speeds[store.state.speedRun])
     }
 
     clearTimeout(states.tickInterval)
-    states.tickInterval = setTimeout(tick, out === undefined ? store.state.speedRun : out)
+    states.tickInterval = setTimeout(tick, out === undefined ? speeds[store.state.speedRun] : out)
   },
 
   pause(isPause) {
@@ -96,9 +95,55 @@ const states = {
     if (state.status === 'playing' && !state.pause && !state.reset) states.auto()
   },
 
+  entranceAnimation() {
+    clearTimeout(states.overTimeout)
+    store.commit('reset', true)
+    const COLS = 10, ROWS = 20
+    const newMatrix = []
+    for (let y = 0; y < ROWS; y++) {
+      const row = []
+      for (let x = 0; x < COLS; x++) row.push(0)
+      newMatrix.push(row)
+    }
+    store.commit('matrix', JSON.parse(JSON.stringify(newMatrix)))
+    let row = ROWS - 1
+    const fillUp = () => {
+      if (row < 0) {
+        states.overTimeout = setTimeout(() => {
+          let clearRow = 0
+          const clearDown = () => {
+            if (clearRow >= ROWS) {
+              states.overTimeout = setTimeout(() => {
+                store.commit('reset', false)
+              }, 200)
+              return
+            }
+            for (let x = 0; x < COLS; x++) {
+              newMatrix[clearRow][x] = 0
+            }
+            store.commit('matrix', JSON.parse(JSON.stringify(newMatrix)))
+            clearRow++
+            states.overTimeout = setTimeout(clearDown, 40)
+          }
+          clearDown()
+        }, 400)
+        return
+      }
+      for (let x = 0; x < COLS; x++) {
+        newMatrix[row][x] = 1
+      }
+      store.commit('matrix', JSON.parse(JSON.stringify(newMatrix)))
+      row--
+      states.overTimeout = setTimeout(fillUp, 50)
+    }
+    fillUp()
+  },
+
   overStart(shouldSubmit) {
     clearTimeout(states.tickInterval)
     clearTimeout(states.overTimeout)
+    store.commit('snake', null)
+    store.commit('food', null)
     store.commit('reset', true)
     store.commit('status', 'gameover')
     store.commit('pause', false)
@@ -121,7 +166,6 @@ const states = {
       }
     }
 
-    // 结束动画：全屏逐行暗红填充
     const baseMatrix = store.state.matrix.length ? store.state.matrix : []
     const newMatrix = []
     for (let y = 0; y < ROWS; y++) {
@@ -131,23 +175,35 @@ const states = {
       }
       newMatrix.push(row)
     }
-    let row = 0
-    const fillStep = () => {
-      if (row >= ROWS) {
+    let row = ROWS - 1
+    const fillUp = () => {
+      if (row < 0) {
         states.overTimeout = setTimeout(() => {
-          store.commit('matrix', [])
-          states.overTimeout = setTimeout(() => states.overEnd(), 300)
-        }, 500)
+          let clearRow = 0
+          const clearDown = () => {
+            if (clearRow >= ROWS) {
+              states.overTimeout = setTimeout(() => states.overEnd(), 300)
+              return
+            }
+            for (let x = 0; x < COLS; x++) {
+              newMatrix[clearRow][x] = 0
+            }
+            store.commit('matrix', JSON.parse(JSON.stringify(newMatrix)))
+            clearRow++
+            states.overTimeout = setTimeout(clearDown, 40)
+          }
+          clearDown()
+        }, 400)
         return
       }
       for (let x = 0; x < COLS; x++) {
-        newMatrix[row][x] = 2
+        newMatrix[row][x] = 1
       }
       store.commit('matrix', JSON.parse(JSON.stringify(newMatrix)))
-      row++
-      states.overTimeout = setTimeout(fillStep, 50)
+      row--
+      states.overTimeout = setTimeout(fillUp, 50)
     }
-    fillStep()
+    fillUp()
   },
 
   overEnd() {
@@ -155,7 +211,13 @@ const states = {
     clearTimeout(states.overTimeout)
     store.commit('snake', null)
     store.commit('food', null)
-    store.commit('matrix', [])
+    const emptyMatrix = []
+    for (let y = 0; y < ROWS; y++) {
+      const row = []
+      for (let x = 0; x < COLS; x++) row.push(0)
+      emptyMatrix.push(row)
+    }
+    store.commit('matrix', emptyMatrix)
     store.commit('status', 'ready')
     store.commit('reset', false)
     store.commit('lock', false)

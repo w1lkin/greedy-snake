@@ -10,12 +10,10 @@
             <Point :cur="status==='playing'" :max="max" :point="points" />
             <p>{{foodLabel}}</p>
             <Number :number="foodCount" />
-            <p>{{difficultyLabel}}</p>
-            <Number :number="difficultyCode" :length="1" />
             <p>{{wallPassLabel}}</p>
-            <div class="wall-indicator" :class="{on: wallPass}">
-              <span>{{wallPass ? 'ON' : 'OFF'}}</span>
-            </div>
+            <Number :number="wallPass ? 1 : 0" :length="1" />
+            <p>{{levelLabel}}</p>
+            <Number :number="speedRun + 1" :length="1" />
             <div class="bottom">
               <Music :data="music" />
               <Pause :data="pause" />
@@ -25,7 +23,7 @@
         </div>
       </div>
     </div>
-    <Keyboard :filling='filling' :wallPass="wallPass" :difficulty="difficulty" />
+    <Keyboard :filling='filling' :wallPass="wallPass" />
     <Guide/>
   </div>
 </template>
