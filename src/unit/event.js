@@ -1,20 +1,23 @@
 const eventName = {}
+const eventFired = {}  // 记录 once 事件是否已触发
 
 const down = o => {
-  // 键盘、手指按下
+  // once 事件防抖：已触发过就不再执行
+  if (o.once && eventFired[o.key]) return
+
   const keys = Object.keys(eventName)
   keys.forEach(i => {
     clearTimeout(eventName[i])
     eventName[i] = null
   })
-  if (!o.callback) {
-    return
-  }
+  if (!o.callback) return
   const clear = () => {
     clearTimeout(eventName[o.key])
   }
   o.callback(clear)
+
   if (o.once === true) {
+    eventFired[o.key] = true
     return
   }
   let begin = o.begin || 100
@@ -30,12 +33,10 @@ const down = o => {
 }
 
 const up = o => {
-  // 键盘、手指松开
   clearTimeout(eventName[o.key])
   eventName[o.key] = null
-  if (!o.callback) {
-    return
-  }
+  eventFired[o.key] = false  // 重置 once 状态
+  if (!o.callback) return
   o.callback()
 }
 
@@ -47,8 +48,4 @@ const clearAll = () => {
   })
 }
 
-export default {
-  down,
-  up,
-  clearAll
-}
+export default { down, up, clearAll }
