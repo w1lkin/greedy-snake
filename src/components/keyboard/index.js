@@ -2,7 +2,6 @@ import Vbutton from './button/index.vue'
 import { i18n, lan } from '../../unit/const'
 import store from '../../vuex/store'
 import todo from '../../control/todo'
-import states from '../../control/states'
 
 const fired = {}
 
@@ -56,21 +55,13 @@ export default {
     onRightEnd() { fired.right = false; store.commit('key_right', false); todo.right.up(store) },
     onReset(e) {
       if (e) e.preventDefault()
-      if (store.state.lock) return
-      if (store.state.status === 'playing') { states.overStart(true) }
-      else if (store.state.status === 'gameover') { states.overEnd(); states.start() }
-      else { states.start() }
-      store.commit('key_reset', true)
-      setTimeout(() => store.commit('key_reset', false), 200)
+      // 统一走 todo.r.down（和键盘 R 键一致）
+      todo.r.down(store)
     },
     onPause(e) {
       if (e) e.preventDefault()
-      if (store.state.lock) return
-      if (store.state.status === 'gameover') { states.overEnd(); states.start() }
-      else if (store.state.status === 'playing') { states.pause(!store.state.pause) }
-      else { states.start() }
-      store.commit('key_pause', true)
-      setTimeout(() => store.commit('key_pause', false), 200)
+      // 统一走 todo.p.down（和键盘 Space/P 键一致）
+      todo.p.down(store)
     },
     onMusic(e) {
       if (e) e.preventDefault()

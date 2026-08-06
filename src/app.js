@@ -17,6 +17,16 @@ export default {
   mounted() {
     this.render()
     window.addEventListener('resize', this.resize.bind(this), true)
+    // Vue 挂载后，首次用户交互自动开始游戏
+    let autoStarted = false
+    const startOnce = () => {
+      if (autoStarted) return
+      autoStarted = true
+      states.start()
+    }
+    document.addEventListener('touchstart', startOnce, { once: true })
+    document.addEventListener('mousedown', startOnce, { once: true })
+    document.addEventListener('keydown', startOnce, { once: true })
   },
   data() {
     return {
