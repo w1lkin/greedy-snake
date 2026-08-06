@@ -8,12 +8,12 @@ const downFn = store => {
     once: true,
     callback: () => {
       const state = store.state
-      if (state.lock) return
-      if (state.status === 'playing') {
-        states.pause(!state.pause)
-      } else if (state.status === 'gameover') {
+      // gameover 中：先停止 overEnd 动画再重新开始
+      if (state.status === 'gameover') {
         states.overEnd()
         states.start()
+      } else if (state.status === 'playing') {
+        states.pause(!state.pause)
       } else {
         states.start()
       }
