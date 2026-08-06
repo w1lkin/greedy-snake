@@ -1,8 +1,7 @@
 const eventName = {}
-const eventFired = {}  // 记录 once 事件是否已触发
+const eventFired = {}
 
 const down = o => {
-  // once 事件防抖：已触发过就不再执行
   if (o.once && eventFired[o.key]) return
 
   const keys = Object.keys(eventName)
@@ -18,6 +17,10 @@ const down = o => {
 
   if (o.once === true) {
     eventFired[o.key] = true
+    // once 事件在回调执行后延迟重置，允许下次再触发
+    setTimeout(() => {
+      eventFired[o.key] = false
+    }, 300)
     return
   }
   let begin = o.begin || 100
@@ -35,7 +38,7 @@ const down = o => {
 const up = o => {
   clearTimeout(eventName[o.key])
   eventName[o.key] = null
-  eventFired[o.key] = false  // 重置 once 状态
+  eventFired[o.key] = false
   if (!o.callback) return
   o.callback()
 }
