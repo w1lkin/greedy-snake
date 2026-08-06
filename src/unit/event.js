@@ -17,10 +17,6 @@ const down = o => {
 
   if (o.once === true) {
     eventFired[o.key] = true
-    // once 事件在回调执行后延迟重置，允许下次再触发
-    setTimeout(() => {
-      eventFired[o.key] = false
-    }, 300)
     return
   }
   let begin = o.begin || 100

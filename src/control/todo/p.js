@@ -8,7 +8,6 @@ const downFn = store => {
     once: true,
     callback: () => {
       const state = store.state
-      // gameover 中：先停止 overEnd 动画再重新开始
       if (state.status === 'gameover') {
         states.overEnd()
         states.start()
@@ -17,6 +16,7 @@ const downFn = store => {
       } else {
         states.start()
       }
+      event.up({ key: 'p' })
     }
   })
 }
