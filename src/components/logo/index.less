@@ -1,0 +1,71 @@
+.logo {
+    width: 224px;
+    height: 200px;
+    position: absolute;
+    top: 100px;
+    left: 12px;
+    text-align: center;
+    overflow: hidden;
+    p {
+        position: absolute;
+        width: 100%;
+        line-height: 1.4;
+        top: 110px;
+        left: 0;
+        font-family: initial;
+        letter-spacing: 6px;
+        text-shadow: 1px 1px 1px rgba(255, 255, 255, .35);
+    }
+    .snake {
+        width: 80px;
+        height: 86px;
+        margin: 10px auto 0;
+        position: relative;
+        &.r1 { .head(0, 0); }
+        &.r2 { .head(0, -2px); }
+        &.r3 { .head(2px, 0); }
+        &.r4 { .head(-2px, 0); }
+        &.l1 { .head(0, 0); transform: scaleX(-1); }
+        &.l2 { .head(0, -2px); transform: scaleX(-1); }
+        &.l3 { .head(2px, 0); transform: scaleX(-1); }
+        &.l4 { .head(-2px, 0); transform: scaleX(-1); }
+    }
+}
+
+.head(@dx, @dy) {
+    b {
+        position: absolute;
+        top: 20px + @dy;
+        left: 56px + @dx;
+        width: 18px;
+        height: 18px;
+        padding: 2px;
+        border: 2px solid #000;
+        margin: 0;
+        &:after {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            background: #000;
+        }
+        &.eye {
+            top: 18px + @dy;
+            left: 56px + @dx;
+            width: 22px;
+            height: 6px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            z-index: 2;
+            &:after {
+                content: '';
+                display: block;
+                width: 6px;
+                height: 6px;
+                background: #000;
+                margin: 0 auto;
+            }
+        }
+    }
+}
