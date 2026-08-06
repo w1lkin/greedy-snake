@@ -3,13 +3,14 @@ import { COLS, ROWS, DIR } from './const'
 // 蛇初始长度
 const INIT_LEN = 3
 
-// 创建初始蛇状态：body[0] = 头, body[length-1] = 尾
+// 创建初始蛇状态：body[0] = 头(最右), body[1] = 身, body[2] = 尾(最左)
+// 蛇头在右，身体向左排列，初始方向 RIGHT 不会撞自己
 export function createSnake() {
   const startX = Math.floor(COLS / 2)
   const startY = Math.floor(ROWS / 2)
   const body = []
   for (let i = 0; i < INIT_LEN; i++) {
-    body.push({ x: startX + i, y: startY })
+    body.push({ x: startX + (INIT_LEN - 1 - i), y: startY })
   }
   return {
     body,

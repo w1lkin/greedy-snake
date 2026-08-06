@@ -26,7 +26,7 @@ const states = {
     clearTimeout(states.overTimeout)
     const state = store.state
     const snake = createSnake()
-    const food = spawnFood(snake, state.wallPass)
+    const food = spawnFood(snake)
     const diff = DIFFICULTIES[state.difficulty]
     store.commit('snake', snake)
     store.commit('food', food)
