@@ -6,6 +6,7 @@ import Number from './components/number/index.vue'
 import Point from './components/point/index.vue'
 import Keyboard from './components/keyboard/index.vue'
 import Matrix from './components/matrix/index.vue'
+import Logo from './components/logo/index.vue'
 import { mapState } from 'vuex'
 import { transform, i18n, lan } from './unit/const'
 import { visibilityChangeEvent, isFocus } from './unit/'
@@ -39,7 +40,7 @@ export default {
       filling: ''
     }
   },
-  components: { Decorate, Guide, Music, Pause, Number, Point, Keyboard, Matrix },
+  components: { Decorate, Guide, Music, Pause, Number, Point, Keyboard, Matrix, Logo },
   computed: {
     foodLabel: () => i18n.foodCount[lan],
     difficultyLabel: () => i18n.difficulty[lan],

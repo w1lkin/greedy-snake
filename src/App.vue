@@ -5,6 +5,7 @@
       <div class="screen">
         <div class="panel">
           <Matrix :propMatrix="matrix" />
+          <Logo :cur="status==='playing'" :reset="reset" />
           <div class="state">
             <Point :cur="status==='playing'" :max="max" :point="points" />
             <p>{{foodLabel}}</p>
