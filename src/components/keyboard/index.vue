@@ -84,7 +84,12 @@
           :top="100"
           :left="52"
           :label="'GO'"
-          :active="true"
+          :active="false"
+          @touchstart.native.prevent.stop="onGoDown"
+          @mousedown.native.prevent.stop="onGoDown"
+          @touchend.native="onGoUp"
+          @mouseup.native="onGoUp"
+          @mouseleave.native="onGoUp"
         />
       </div>
 </template>

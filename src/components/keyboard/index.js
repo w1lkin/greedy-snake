@@ -71,6 +71,13 @@ export default {
       store.commit('key_pause', false)
       todo.p.up(store)
     },
+    onGoDown(e) {
+      if (e) e.preventDefault()
+      store.commit('key_down', true)
+    },
+    onGoUp() {
+      store.commit('key_down', false)
+    },
     onMusicDown(e) {
       if (e) e.preventDefault()
       if (store.state.lock) return
