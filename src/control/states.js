@@ -152,11 +152,12 @@ const states = {
 
     if (shouldSubmit) {
       const finalPoints = store.state.points
+      const speedStart = store.state.speedStart
       if (finalPoints > 0) {
         const trySubmit = retries => {
           if (window.GamePlatform && typeof window.GamePlatform.submitScore === 'function') {
-            window.GamePlatform.submitScore('greedy-snake', finalPoints)
-              .then(() => { console.log('[greedy-snake] score submitted:', finalPoints) })
+            window.GamePlatform.submitScore('greedy-snake', finalPoints, { difficulty: speedStart })
+              .then(() => { console.log('[greedy-snake] score submitted:', finalPoints, 'level=', speedStart) })
               .catch(e => { console.warn('[greedy-snake] submitScore failed:', e && e.message) })
           } else if (retries > 0) {
             setTimeout(() => trySubmit(retries - 1), 1000)

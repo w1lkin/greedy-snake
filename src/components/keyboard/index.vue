@@ -84,7 +84,7 @@
           :top="100"
           :left="52"
           :label="'GO'"
-          :active="false"
+          :active="true"
         />
       </div>
 </template>
