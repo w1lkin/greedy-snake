@@ -78,9 +78,14 @@
           @touchstart.native.prevent.stop="onPauseDown" @mousedown.native.prevent.stop="onPauseDown"
           @touchend.native="onPauseUp" @mouseup.native="onPauseUp" @mouseleave.native="onPauseUp"
         />
-        <div class="big-btn">
-          <span>GO</span>
-        </div>
+        <vbutton
+          color="blue"
+          size="s0"
+          :top="100"
+          :left="52"
+          :label="'GO'"
+          :active="false"
+        />
       </div>
 </template>
 <style lang="less">
