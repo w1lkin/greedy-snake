@@ -8,7 +8,7 @@ import Keyboard from './components/keyboard/index.vue'
 import Matrix from './components/matrix/index.vue'
 import Logo from './components/logo/index.vue'
 import { mapState } from 'vuex'
-import { transform, i18n, lan } from './unit/const'
+import { transform, i18n, lan, lastRecord, speeds } from './unit/const'
 import { visibilityChangeEvent, isFocus } from './unit/'
 import states from './control/states'
 
@@ -16,7 +16,6 @@ export default {
   mounted() {
     this.render()
     window.addEventListener('resize', this.resize.bind(this), true)
-    states.entranceAnimation()
   },
   data() {
     return {
@@ -67,6 +66,22 @@ export default {
     start() {
       if (visibilityChangeEvent) {
         document.addEventListener(visibilityChangeEvent, () => { states.focus(isFocus()) }, false)
+      }
+
+      if (lastRecord) {
+        // 有上次记录：恢复状态
+        if (lastRecord.snake && !lastRecord.pause) {
+          // 上次在游戏中且没暂停 → 继续游戏
+          const speedRun = this.$store.state.speedRun
+          const timeout = speeds[speedRun] / 2
+          states.auto(timeout)
+        }
+        if (!lastRecord.snake) {
+          // 上次不在游戏中 → 触发入场动画
+          states.entranceAnimation()
+        }
+      } else {
+        states.entranceAnimation()
       }
     }
   }
