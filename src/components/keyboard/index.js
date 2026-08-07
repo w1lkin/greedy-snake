@@ -73,10 +73,10 @@ export default {
     },
     onGoDown(e) {
       if (e) e.preventDefault()
-      store.commit('key_down', true)
+      // GO 大按钮暂无功能，仅保留点击反馈
     },
     onGoUp() {
-      store.commit('key_down', false)
+      // GO 大按钮暂无功能
     },
     onMusicDown(e) {
       if (e) e.preventDefault()
