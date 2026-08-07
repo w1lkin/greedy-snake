@@ -152,15 +152,11 @@ const states = {
 
     if (shouldSubmit) {
       const finalPoints = store.state.points
-      const speedStart = store.state.speedStart
-      // 将 speedStart(0-5) 映射到 difficulty key (easy/medium/hard)
-      const diffMap = { 0: 'easy', 1: 'easy', 2: 'medium', 3: 'medium', 4: 'hard', 5: 'hard' }
-      const difficulty = diffMap[speedStart] || 'medium'
       if (finalPoints > 0) {
         const trySubmit = retries => {
           if (window.GamePlatform && typeof window.GamePlatform.submitScore === 'function') {
-            window.GamePlatform.submitScore('greedy-snake', finalPoints, { difficulty })
-              .then(() => { console.log('[greedy-snake] score submitted:', finalPoints, 'difficulty=', difficulty) })
+            window.GamePlatform.submitScore('greedy-snake', finalPoints)
+              .then(() => { console.log('[greedy-snake] score submitted:', finalPoints) })
               .catch(e => { console.warn('[greedy-snake] submitScore failed:', e && e.message) })
           } else if (retries > 0) {
             setTimeout(() => trySubmit(retries - 1), 1000)
