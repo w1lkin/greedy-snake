@@ -81,8 +81,8 @@
         <vbutton
           color="blue"
           size="s0"
-          :top="150"
-          :left="120"
+          :top="100"
+          :left="52"
           :label="'GO'"
           :active="false"
         />
