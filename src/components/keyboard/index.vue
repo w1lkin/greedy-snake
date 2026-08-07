@@ -78,6 +78,9 @@
           @touchstart.native.prevent.stop="onPauseDown" @mousedown.native.prevent.stop="onPauseDown"
           @touchend.native="onPauseUp" @mouseup.native="onPauseUp" @mouseleave.native="onPauseUp"
         />
+        <div class="big-btn">
+          <span>GO</span>
+        </div>
       </div>
 </template>
 <style lang="less">
