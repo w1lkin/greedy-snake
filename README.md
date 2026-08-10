@@ -35,7 +35,3 @@ npm run build
 
 部署于 Cloudflare Pages：`greedy-snake-3wq.pages.dev`
 
-## 版本
-
-- **v1.0.0** — 初始发布：Vue 2 贪吃蛇、穿墙模式、四语言、云端战绩
-- **v2.0.0** — 完善项目文档（AGENTS.md / README.md）
